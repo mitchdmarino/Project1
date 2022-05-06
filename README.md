@@ -45,7 +45,7 @@ HTML, CSS, JavaScript, HTML 5 Canvas
 
 # WireFrame 
 
-![Stratego Lite](./Screen%20Shot%202022-05-06%20at%209.07.24%20AM.png)
+![Stratego Lite](https://i.imgur.com/ktQuvv4.png)
 
 # Minimum Viable Product
 
