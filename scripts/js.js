@@ -255,7 +255,7 @@ for (let i=0;i<8;i++) {
 // create a class for all player pieces on each team
 
 // array to store all possible soldier ranks 
-const soldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'F']
+const redSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'F']
 
 // Blue team (player 1)
 class BlueSoldier {
@@ -553,10 +553,12 @@ for (let i=0; i<24; i++) {
 }
 // randomize configuration of pieces 
 redTeam.forEach(item => {
-    item.rank = shuffle(soldierRanks).pop()
+    item.rank = shuffle(redSoldierRanks).pop()
 })
 
 const blueTeam = []
+// start i=63 and go to 39 to fill the bottom 4 rows of the gameboard
+// (since gamespaceArray[39-63] is the bottom 4 rows of the gameboard)
 for (let i=63; i>39; i--) {
     let newX = gameSpaceArray[i].x + 10
     let newY = gameSpaceArray[i].y + 10
@@ -565,8 +567,59 @@ for (let i=63; i>39; i--) {
    
 }
 
+
+
 // render the initial board
 newBoard()
+
+// add customized rank to each blue piece. 
+// click on a soldier, then click on a rank to add the corresponding rank
+const blueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+function playerConfiguration() {
+    canvas.addEventListener('click', e => {
+        const clickPosition = findPosition(e.offsetX,e.offsetY)
+        let clickedSoldier = ""
+        // if column and row matches that of a player soldier (blue team), 
+        // we select that soldier as "clickedSoldier"
+        blueTeam.forEach(item => {
+            // check if there is a blue soldier on that position
+            if (arrayEquals(item.position, clickPosition)) {
+                clickedSoldier = item
+            }
+        })
+        console.log(clickedSoldier)
+        // if there is a clicked soldier, add event listener
+        if (clickedSoldier!=="") {
+            document.addEventListener('keydown', e=> {
+                console.log(clickedSoldier)
+                blueSoldierRanks.forEach((item, index) => {
+                    if (clickedSoldier.rank==='#') {    
+                        if (item == e.key) {
+                            clickedSoldier.rank = item
+                            console.log(blueSoldierRanks)
+                            blueSoldierRanks.splice(index,1)
+                            newBoard()
+                        } 
+                    } 
+                })
+                if (blueSoldierRanks.length === 0) {
+                    console.log('let the games begin')
+                    playerTurn()
+                    
+                }
+                else {
+                    playerConfiguration()
+                }
+            }, {once: true})
+
+        }
+        else {
+            playerConfiguration()
+        }
+    },{once: true})
+}
+playerConfiguration()
+
 
 function playerTurn() {
     // add click event listener
@@ -600,6 +653,8 @@ function playerTurn() {
 
 
 // wait 2 seconds, then CPU turn, always will be valid
+// cpuTurn is nested into player turn, only occurs once player turn is over and 
+// gameStatus is still true
 function cpuTurn() {
     let cpuTurn = true 
     // CPU selects random piece, random movement direction, checks if 
@@ -670,6 +725,3 @@ function cpuTurn() {
 
         // move on to player turn 
 
-
-
-playerTurn()
