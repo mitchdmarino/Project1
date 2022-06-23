@@ -192,6 +192,8 @@ const movementHandler = function(item) {
                     }
                 }
                 break
+            default: 
+                playerTurn()
         }
         e.stopPropagation()
         newBoard()
@@ -301,7 +303,7 @@ for (let i=0;i<8;i++) {
 // create a class for all player pieces on each team
 
 // array to store all possible soldier ranks 
-const redSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+let redSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
 
 // Blue team (player 1)
 class BlueSoldier {
@@ -769,7 +771,6 @@ document.querySelector('#start').addEventListener('click', () => {
             console.log('let the games begin')
             playerTurn()
             gameStarted = true
-            // remove start and randomize buttons
         }
         else {
             console.log('board is not set up correctly')
@@ -778,37 +779,38 @@ document.querySelector('#start').addEventListener('click', () => {
         console.log('you have already started the game. press reset to start over')
     } 
 })
-
+function findSoldier(e) {
+    console.log(`${e.offsetX} is X, ${e.offsetY} is Y`)
+    // use findPosition to get column and row 
+    const clickPosition = findPosition(e.offsetX,e.offsetY)
+    let clickedSoldier = ""
+    // if column and row matches that of a player soldier (blue team), 
+    // we select that soldier as "clickedSoldier"
+    blueTeam.forEach(item => {
+        // check if there is a blue soldier on that position
+        if (arrayEquals(item.position, clickPosition)) {
+            clickedSoldier = item
+        }
+    })
+    console.log(clickedSoldier)
+    // if there is a clicked soldier that isn't the flag, add event listener
+if (clickedSoldier!=="" && clickedSoldier.rank!=='f') {
+        document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
+    }
+    // if clicked on flag, no move can occur. 
+    else if (clickedSoldier.rank ==='f') {
+        console.log('cannot move the flag')
+        playerTurn()
+    }
+    // if there isn't a clicked soldier, we need to run the function again
+    else {
+        playerTurn()
+    }
+}
 function playerTurn() {   
         // add click event listener
-        canvas.addEventListener('click', e => {
-            console.log(`${e.offsetX} is X, ${e.offsetY} is Y`)
-            // use findPosition to get column and row 
-            const clickPosition = findPosition(e.offsetX,e.offsetY)
-            let clickedSoldier = ""
-            // if column and row matches that of a player soldier (blue team), 
-            // we select that soldier as "clickedSoldier"
-            blueTeam.forEach(item => {
-                // check if there is a blue soldier on that position
-                if (arrayEquals(item.position, clickPosition)) {
-                    clickedSoldier = item
-                }
-            })
-            console.log(clickedSoldier)
-            // if there is a clicked soldier that isn't the flag, add event listener
-        if (clickedSoldier!=="" && clickedSoldier.rank!=='f') {
-                document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
-            }
-            // if clicked on flag, no move can occur. 
-            else if (clickedSoldier.rank ==='f') {
-                console.log('cannot move the flag')
-                playerTurn()
-            }
-            // if there isn't a clicked soldier, we need to run the function again
-            else {
-                playerTurn()
-            }
-        },{once: true})
+        // FLAG currently, when i reset, this event listener stacks on itself
+        canvas.addEventListener('click', findSoldier,{once: true})
 }
 
 // player moves the piece
@@ -895,7 +897,10 @@ function cpuTurn() {
 
 
 document.querySelector('#reset').addEventListener('click', () => {
-   console.log('reset')
+    console.log('reset')
+    // remove event listener from canvas 
+    canvas.removeEventListener('click', findSoldier )
+    // set booleans to default 
     gameStatus = true
     gameReady = false 
     gameStarted = false
@@ -935,6 +940,7 @@ document.querySelector('#reset').addEventListener('click', () => {
         redTeam.push(soldier)
     }
     // randomize configuration of pieces 
+    redSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
     redTeam.forEach(item => {
         item.rank = shuffle(redSoldierRanks).pop()
     })
@@ -949,7 +955,9 @@ document.querySelector('#reset').addEventListener('click', () => {
         blueTeam.push(soldier)
     }
     blueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+    
     // render the initial board
     newBoard()
+    
 
 })
