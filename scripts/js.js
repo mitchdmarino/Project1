@@ -56,8 +56,12 @@ class GameSpace {
         this.y = canvas.height*row/8
         this.width = canvas.width/8
         this.height = canvas.height/8
-        this.openSpace = isOpen
+        this.position = findPosition(this.x, this.y) 
+        // is there a token on this space? 
         this.color = color
+        this.openSpace = isOpen
+        this.currentSoldier = ""
+        
         // if openSpace = false, player won't be able to move there
     }
     renderSpace() {
@@ -110,6 +114,7 @@ gameSpaceArray.forEach(item => {
 
 // create a class for all player pieces
 
+// Blue team (player 1)
 class BlueSoldier {
     static total = 24
     constructor(rank, x, y) {
@@ -118,11 +123,13 @@ class BlueSoldier {
         this.y = y
         this.alive=true
         this.color = 'blue'
+        this.position = findPosition(this.x,this.y)
     }
     //render function for the soldier
     renderSoldier() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x,this.y, canvas.width/12, canvas.height/12)
+        this.showRank()
     }
     showRank() {
         ctx.fillStyle = 'black'
@@ -132,17 +139,22 @@ class BlueSoldier {
     }
     moveForward() {
         this.y -= canvas.height/8
+        this.position[1] -= 1
     }
     moveLeft() {
-
+        this.x -= canvas.width/8
+        this.position[0] -=1
     }
     moveRight() {
-
+        this.x += canvas.width/8
+        this.position[0] +=1
     }
     moveBack() {
-
+        this.y += canvas.width/8
+        this.position[1] +=1
     }
 }
+// Red Team (CPU)
 class RedSoldier {
     static total = 24
     constructor(rank, x, y) {
@@ -151,32 +163,35 @@ class RedSoldier {
         this.y = y
         this.alive=true
         this.color = 'red'
+        this.position = findPosition(this.x,this.y)
     }
     //render function for the soldier
     renderSoldier() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x,this.y, canvas.width/12, canvas.height/12)
+        this.showRank()
     }
     showRank() {
         ctx.fillStyle = 'black'
         ctx.textAlign = 'center'
         ctx.font = '30px Comic Sans MS'
-        ctx.fillText(this.rank, this.x+10, this.y+10)
+        ctx.fillText(this.rank, this.x+20, this.y+30)
     }
     moveForward() {
         this.y += canvas.height/8
-        debugger
-        ctx.fillStyle = (this.color)
-        ctx.fillRect(this.x, this.y, canvas.width/12, canvas.height/12)
+        this.position[1] += 1
     }
     moveLeft() {
-
+        this.x += canvas.width/8
+        this.position[0] +=1
     }
     moveRight() {
-
+        this.x -= canvas.width/8
+        this.position[0] -=1
     }
     moveBack() {
-
+        this.y -= canvas.width/8
+        this.position[1] -=1
     }
 }
 
@@ -191,7 +206,7 @@ const redTeam = []
 for (let i=0; i<24; i++) {
     let newX = gameSpaceArray[i].x + 10
     let newY = gameSpaceArray[i].y + 10
-    const soldier = new RedSoldier(1,newX,newY)
+    const soldier = new RedSoldier(3,newX,newY)
     redTeam.push(soldier)
 }
 redTeam.forEach(item => {
@@ -227,13 +242,102 @@ const gameLoop = function() {
     })
 }
 
+// for testing 
 document.querySelector('#move-test').addEventListener('click', () => {
     console.log('move was clicked')
     blueTeam[23].moveForward()
+    redTeam[23].moveForward()
     gameLoop()
-    
-    
+    console.log(blueTeam[23])
+    console.log(redTeam[23])
+    console.log(gameSpaceArray[23])
 })
+
+// when a player clicks, we need to know which token is being clicked
+// designate by row and column of clicking event 
+function findPosition(x,y) {
+    let column = 0
+    let row = 0
+    switch(true) {
+        case (x<62.5): 
+            column = 0
+            break
+        case (x<125): 
+            column = 1
+            break
+        case (x<187.5): 
+            column = 2
+            break
+        case (x<250): 
+            column = 3
+            break
+        case (x<312.5): 
+            column = 4
+            break
+        case (x<375): 
+            column = 5
+            break
+        case (x<437.5): 
+            column = 6
+            break
+        case (x<500): 
+            column = 7
+            break
+    }
+    switch(true) {
+        case (y<62.5): 
+            row = 0
+            break
+        case (y<125): 
+            row = 1
+            break
+        case (y<187.5): 
+            row = 2
+            break
+        case (y<250): 
+            row = 3
+            break
+        case (y<312.5): 
+            row = 4
+            break
+        case (y<375): 
+            row = 5
+            break
+        case (y<437.5): 
+            row = 6
+            break
+        case (y<500): 
+            row = 7
+            break
+    }
+    return([column, row])
+
+    // this gives us our x and y coordinates on the grid( 
+    // where X is the column# and Y is the row#)
+    // can we combine these into a single 'space'? 
+    // create an array that stores the information for each space? 
+    // build that into our gameSpaceArray 
+    // -- needs to have a soldier property 
+}
+
+// https://masteringjs.io/tutorials/fundamentals/compare-arrays
+function arrayEquals(a,b) {
+    return Array.isArray(a) &&
+        Array.isArray(b) &&
+        a.every((val,index) => val === b[index])
+}
+// function playerTurn() {
+    canvas.addEventListener('click', e => {
+        console.log(`${e.offsetX} is X, ${e.offsetY} is Y`)
+        const clickPosition = findPosition(e.offsetX,e.offsetY)
+        blueTeam.forEach(item => {
+            // check if the position array matches one of a token
+            if (arrayEquals(item.position, clickPosition)) {
+                console.log(item)
+            }
+            
+        })
+    })
 
 
 
