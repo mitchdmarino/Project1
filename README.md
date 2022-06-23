@@ -101,7 +101,9 @@ The minimum viable product will be 'Stratego-Lite.' It is not as complex as the 
 * Canvas. I may be complicating things by introducing canvas into it, but I wanted to see what I could do with it. Being a grid setup, it might be easier just use DOM manipulation, but I think with canvas I can introduce some smooth animations and keep track of each token easily  
 * This game has a lot of specific rules so it may be a bit complex to get everything working together. 
 
+# Project Link: 
 
+https://mitchdmarino.github.io/Stratego-mock/
 
 
 
