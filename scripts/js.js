@@ -128,10 +128,10 @@ class BlueSoldier {
         ctx.fillStyle = 'black'
         ctx.textAlign = 'center'
         ctx.font = '30px Comic Sans MS'
-        ctx.fillText(rank, this.x+10, this.y+10)
+        ctx.fillText(this.rank, this.x+20, this.y+30)
     }
-    moveFoward() {
-
+    moveForward() {
+        this.y -= canvas.height/8
     }
     moveLeft() {
 
@@ -161,10 +161,13 @@ class RedSoldier {
         ctx.fillStyle = 'black'
         ctx.textAlign = 'center'
         ctx.font = '30px Comic Sans MS'
-        ctx.fillText(rank, this.x+10, this.y+10)
+        ctx.fillText(this.rank, this.x+10, this.y+10)
     }
-    moveFoward() {
-
+    moveForward() {
+        this.y += canvas.height/8
+        debugger
+        ctx.fillStyle = (this.color)
+        ctx.fillRect(this.x, this.y, canvas.width/12, canvas.height/12)
     }
     moveLeft() {
 
@@ -201,11 +204,37 @@ for (let i=63; i>39; i--) {
     let newY = gameSpaceArray[i].y + 10
     const soldier = new BlueSoldier(1,newX,newY)
     blueTeam.push(soldier)
-    console.log(i)
+   
 }
 blueTeam.forEach(item => {
     item.renderSoldier()
+    // item.showRank()
 })
+
+const gameLoop = function() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // re render the game board 
+    gameSpaceArray.forEach(item => {
+        item.renderSpace() 
+    })
+    //re render each team of soldiers(with the updated value from the move )
+    redTeam.forEach(item => {
+        item.renderSoldier()
+    })
+    blueTeam.forEach(item => {
+        item.renderSoldier()
+        // item.showRank()
+    })
+}
+
+document.querySelector('#move-test').addEventListener('click', () => {
+    console.log('move was clicked')
+    blueTeam[23].moveForward()
+    gameLoop()
+    
+    
+})
+
 
 
 
