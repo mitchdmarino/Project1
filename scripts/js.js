@@ -481,13 +481,13 @@ class BlueSoldier {
         ctx.fillStyle = 'white'
         ctx.font = '20px Comic Sans MS'
         if (this.rank==='f') {
-            ctx.fillText('⛳️', this.x+(canvas.width/45) , this.y+(canvas.width/17))
+            ctx.fillText('⛳️', this.x+(canvas.width/65) , this.y+(canvas.height/22))
         }
         else if (this.rank==='b') {
-            ctx.fillText('💣', this.x+(canvas.width/45) , this.y+(canvas.width/17))
+            ctx.fillText('💣', this.x+(canvas.width/65) , this.y+(canvas.height/20))
         }
         else {
-            ctx.fillText(this.rank, this.x+(canvas.width/45) , this.y+(canvas.width/17))
+            ctx.fillText(this.rank, this.x+(canvas.width/45) , this.y+(canvas.height/20))
         }     
     }
 
@@ -671,7 +671,7 @@ class RedSoldier {
         this.alive=true
         this.color = 'red'
         this.position = findPosition(this.x,this.y)
-        this.revealed = true
+        this.revealed = false
     }
     //render function for the soldier
     renderSoldier() {
@@ -690,13 +690,13 @@ class RedSoldier {
             ctx.fillStyle = 'white'
             ctx.font = '20px Comic Sans MS'
             if (this.rank==='f') {
-                ctx.fillText('⛳️', this.x+(canvas.width/45) , this.y+(canvas.width/17))
+                ctx.fillText('⛳️', this.x+(canvas.width/65) , this.y+(canvas.height/22))
             }
             else if (this.rank==='b') {
-                ctx.fillText('💣', this.x+(canvas.width/45) , this.y+(canvas.width/17))
+                ctx.fillText('💣', this.x+(canvas.width/65) , this.y+(canvas.height/20))
             }
             else {
-                ctx.fillText(this.rank, this.x+(canvas.width/45) , this.y+(canvas.width/17))
+                ctx.fillText(this.rank, this.x+(canvas.width/45) , this.y+(canvas.height/20))
             }     
         }
     }
@@ -900,7 +900,7 @@ gamemodeButton.addEventListener('click', ()=> {
         6,7,5,5,8,8,5,9,5,6,
         9,7,8,6,9,'s',7,'b',6,8],
         ['b',2,'s',3,9,6,8,3,9,6,
-        7,'b',8,5,8,1,9,9,4,9,
+        7,'b',8,5,4,1,9,9,4,9,
         'b',7,'b',9,9,6,7,5,9,5,
         'f','b',7,'b',5,8,8,8,6,4],
         [9,9,8,4,'b','b',7,7,'b','b',
