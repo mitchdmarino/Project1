@@ -45,7 +45,7 @@ HTML, CSS, JavaScript, HTML 5 Canvas
 
 # WireFrame 
 
-![Stratego Lite](./images/Stratego%20Lite%20wireframe.png)
+![Stratego Lite](./images/wireframe.png)
 
 # Minimum Viable Product
 
