@@ -4,19 +4,20 @@ body {
     width: 100vw;
     margin: 0 auto;
     background-color: black;
-    color: black;
+    color: white;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 #container {
     background-color: transparent;
     display: grid;
     grid-template-rows: 100px 500px 2fr;
-    grid-template-columns: 3fr 2fr 500px 5fr;
+    grid-template-columns: 1fr 500px 1fr;
     grid-template-areas: 
-        'margin topleft topmid topright'
-        'margin left game right'
-        'margin botleft bottom botright';
-    height: 600px;
-    width: 600px;
+        ' topleft topmid topright'
+        ' left game right'
+        ' botleft bottom botright';
+    height: 800px;
+    width: 800px;
     margin: 0 auto;
 }   
 h1 {
@@ -43,16 +44,15 @@ button {
     border-style: none;
     font-size: 15px;
     width: 100px;
-
-       
 }
 
 
 #key-buttons {
     grid-area: left;
     display: grid; 
-    grid-template-columns: 1fr;
     grid-template-rows: repeat(1fr,6);
+    justify-content: end;
+
 }
 #play {
     grid-area: bottom; 
@@ -97,4 +97,30 @@ figcaption {
     font-size: 25px;
 }
 
+#captured {
+    grid-area: right; 
+    display: grid; 
+    grid-template-rows: 1fr 1fr;
+}
+
+.red-lost { 
+    font-size: 20px;
+    text-align: center; 
+}
+.blue-lost {
+    font-size: 20px;
+    text-align: center; 
+}
+/* #blueCaptured {
+    color: blue;
+}
+#redCaptured {
+    color: red;
+} */
+#blue-box {
+    border: 5px solid blue
+}
+#red-box {
+    border: 5px solid red
+}
 

@@ -235,6 +235,7 @@ const skirmish = function(attackingPiece, defendingPiece) {
         gameStatus = false
         console.log(`The flag has been captured! ${attackingPiece.color} wins!`)
         output.innerHTML=`The flag has been captured! ${attackingPiece.color} wins!`
+        intel(defendingPiece)
     }
     if (defendingPiece.rank === 'b') {
         console.log('kaboom?')
@@ -243,12 +244,14 @@ const skirmish = function(attackingPiece, defendingPiece) {
             defendingPiece.position = null
             fightingSpace.teamColor = attackingPiece.color
             output.innerHTML = 'Miner diffused a bomb.'
+            intel(defendingPiece)
         }
         else {
             attackingPiece.alive=false
             attackingPiece.position = null
             fightingSpace.teamColor = defendingPiece.color
-            output.innerHTML = `Kabooom. ${attackingPiece.color} ${attackingPiece.rank} found a bomb.`
+            output.innerHTML = `Kabooom. ${attackingPiece.color} ${attackingPiece.rank} found a bomb 💣😱.`
+            intel(attackingPiece)
         }
     }
     if (defendingPiece.rank==='s') {
@@ -259,12 +262,15 @@ const skirmish = function(attackingPiece, defendingPiece) {
             attackingPiece.position = null
             fightingSpace.teamColor = ""
             output.innerHTML = `${attackingPiece.color} ${attackingPiece.rank} and ${defendingPiece.color} ${defendingPiece.rank} took each other out!`
+            intel(attackingPiece)
+            intel(defendingPiece)
         }
         else {
             defendingPiece.alive = false
             defendingPiece.position = null
             fightingSpace.teamColor = attackingPiece.color
             output.innerHTML = `${attackingPiece.color} ${attackingPiece.rank} takes out the ${defendingPiece.color} spy!`
+            intel(defendingPiece)
 
         }
     }
@@ -275,12 +281,14 @@ const skirmish = function(attackingPiece, defendingPiece) {
             defendingPiece.alive = false
             fightingSpace.teamColor = attackingPiece.color
             output.innerHTML = `${attackingPiece.color} assassinates the ${defendingPiece.color} Marshall 😳`
+            intel(defendingPiece)
         }
         else {
             attackingPiece.alive=false 
             attackingPiece.position=null
             fightingSpace.teamColor = defendingPiece.color
-            output.innerHTML = `${attackingPiece.color} Spy has been stopped by ${defendingPiece.color}`
+            output.innerHTML = `${attackingPiece.color} Spy has been stopped by ${defendingPiece.color} ${defendingPiece.rank}`
+            intel(attackingPiece)
         }
     }
     // if the defender has a weaker (higher number) rank, he loses and is removed. 
@@ -290,6 +298,7 @@ const skirmish = function(attackingPiece, defendingPiece) {
         defendingPiece.position = null
         fightingSpace.teamColor = attackingPiece.color
         output.innerHTML= `${attackingPiece.color} ${attackingPiece.rank} beats ${defendingPiece.color} ${defendingPiece.rank}`
+        intel(defendingPiece)
     }
     // if the defender is stronger, he wins and kicks the other player out 
     else if (defendingPiece.rank<attackingPiece.rank) {
@@ -298,6 +307,7 @@ const skirmish = function(attackingPiece, defendingPiece) {
         attackingPiece.position = null
         fightingSpace.teamColor = defendingPiece.color
         output.innerHTML= `${attackingPiece.color} ${attackingPiece.rank} loses to ${defendingPiece.color} ${defendingPiece.rank}`
+        intel(attackingPiece)
     }
     else if (defendingPiece.rank===attackingPiece.rank) {
         console.log('Draw. Both soldiers are out')
@@ -307,8 +317,28 @@ const skirmish = function(attackingPiece, defendingPiece) {
         attackingPiece.position = null
         fightingSpace.teamColor = ""
         output.innerHTML = `${attackingPiece.color} ${attackingPiece.rank} and ${defendingPiece.color} ${defendingPiece.rank} took each other out!`
+        intel(attackingPiece)
+        intel(defendingPiece)
     }
     
+}
+
+
+// function to output the total captured soldiers for each side 
+defeatedRedTeam = []
+defeatedBlueTeam = []
+const redCapturedOutput = document.querySelector('#redCaptured')
+const blueCapturedOutput =document.querySelector('#blueCaptured')
+//function Intel 
+const intel = function(defeatedSoldier) {
+    if (defeatedSoldier.color==='red') {
+        defeatedRedTeam.push(defeatedSoldier.rank)
+        redCapturedOutput.innerHTML = defeatedRedTeam
+        }
+    else {
+        defeatedBlueTeam.push(defeatedSoldier.rank)
+        blueCapturedOutput.innerHTML = defeatedBlueTeam
+    }
 }
 
 /*---------------GAME FLOW --------------------------------------------------------------------*/
@@ -1043,6 +1073,10 @@ document.querySelector('#reset').addEventListener('click', () => {
     gameReady = false 
     gameStarted = false
     // reset every array and rerender the items in them
+    defeatedRedTeam = []
+    defeatedBlueTeam = []
+    blueCapturedOutput.innerHTML = ''
+    redCapturedOutput.innerHTML = ''
     gameSpaceArray = []
     for (let i=0;i<10;i++) {
         for (let j=0;j<10;j++) {
@@ -1097,6 +1131,7 @@ document.querySelector('#reset').addEventListener('click', () => {
     
     // render the initial board
     newBoard()
+    
     
 
 })
