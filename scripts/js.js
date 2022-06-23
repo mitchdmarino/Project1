@@ -51,6 +51,7 @@ const newBoard = function() {
 
 // function to shuffle an array 
 // Fisher-Yates Shuffle 
+//https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffle(array) {
 let currentIndex = array.length,  randomIndex;
 
@@ -220,8 +221,8 @@ const movementHandler = function(item) {
     return movementFunction
 }
 const skirmish = function(attackingPiece, defendingPiece) {
-    // attacking piece will always be a soldier(since flag cannot move)
-    // defending piece might be flag. double check
+    // attacking piece will always be a soldier(since flag/bombs cannot move)
+    // defending piece might be flag, bomb, or soldier. double check
     attackingPiece.revealed = true
     defendingPiece.revealed = true
     const fightingSpacePosition = gameSpaceArray.findIndex((space) => {
@@ -972,7 +973,7 @@ newBoard()
 let blueSoldierRanks = [1,2,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,8,9,9,9,9,9,9,9,9,'s','b','b','b','b','b','b','f']
 function playerConfiguration() {
    if (gameStarted ===false && gameReady ===false) { 
-        output.innerHTML=`Click on a blue soldier and type in one of the following ranks: ${blueSoldierRanks}`    
+        output.innerHTML=`Click on a blue soldier and type in one of the following ranks: ${blueSoldierRanks.join(', ')}`    
         canvas.addEventListener('click', e => {
             const clickPosition = findPosition(e.offsetX,e.offsetY)
             let clickedSoldier = ""
@@ -995,7 +996,7 @@ function playerConfiguration() {
                                 clickedSoldier.rank = item
                                 blueSoldierRanks.splice(index,1)
                                 newBoard()
-                                output.innerHTML=`Need to add following ranks: ${blueSoldierRanks}`
+                                output.innerHTML=`Need to add following ranks: ${blueSoldierRanks.join(', ')}`
                             } 
                         } 
                     })
