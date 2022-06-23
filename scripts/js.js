@@ -17,7 +17,6 @@ const instructionsButton = document.querySelector('#instructions-button')
 const instructionsSection = document.querySelector('#instructions')
 instructionsButton.addEventListener('click', ()=> {
     instructionsSection.scrollIntoView(true)
-    instructionsSection.classList.add('reveal')
 })
 /*-------------IMPORTANT FUNCTIONS AND BOOLEANS-------------------------------------------*/
 
@@ -223,6 +222,7 @@ const skirmish = function(attackingPiece, defendingPiece) {
     if (defendingPiece.rank === 'f') {
         gameStatus = false
         console.log(`The flag has been captured! ${attackingPiece.color} wins!`)
+        output.innerHTML=`The flag has been captured! ${attackingPiece.color} wins!`
     }
     // if the defender has a weaker (higher number) rank, he loses and is removed. 
     else if (defendingPiece.rank>attackingPiece.rank) {
@@ -230,6 +230,7 @@ const skirmish = function(attackingPiece, defendingPiece) {
         defendingPiece.alive = false
         defendingPiece.position = null
         fightingSpace.teamColor = attackingPiece.color
+        output.innerHTML= `${attackingPiece.color} ${attackingPiece.rank} beats ${defendingPiece.color} ${defendingPiece.rank}`
     }
     // if the defender is stronger, he wins and kicks the other player out 
     else if (defendingPiece.rank<attackingPiece.rank) {
@@ -237,6 +238,7 @@ const skirmish = function(attackingPiece, defendingPiece) {
         attackingPiece.alive = false
         attackingPiece.position = null
         fightingSpace.teamColor = defendingPiece.color
+        output.innerHTML= `${attackingPiece.color} ${attackingPiece.rank} loses to ${defendingPiece.color} ${defendingPiece.rank}`
     }
     else if (defendingPiece.rank===attackingPiece.rank) {
         console.log('Draw. Both soldiers are out')
@@ -245,6 +247,7 @@ const skirmish = function(attackingPiece, defendingPiece) {
         defendingPiece.alive = false
         attackingPiece.position = null
         fightingSpace.teamColor = ""
+        output.innerHTML = `${attackingPiece.color} ${attackingPiece.rank} and ${defendingPiece.color} ${defendingPiece.rank} took each other out!`
     }
     
 }
@@ -357,137 +360,164 @@ class BlueSoldier {
         const currentSpace = gameSpaceArray.findIndex((space) => {
             return arrayEquals(space.position, this.position)           
         })
-        
-        const potentialSpace = gameSpaceArray.findIndex((space) => {
-            return arrayEquals(space.position, [this.position[0], this.position[1]-1])
-        })
-        if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
-            this.y -= canvas.height/8
-            this.position[1] -=1
-            //Since we have moved, remove soldier attributes from previous space
-            gameSpaceArray[currentSpace].teamColor = ''
-            gameSpaceArray[currentSpace].currentSoldier = ''
-            // now check if opponent is there
-            if (gameSpaceArray[potentialSpace].teamColor ==='red') {
-                // game checks if there is a battle
-                // if yes, battle and remove inferior piece
-                // identify the defender 
-                const defenderIndex = redTeam.findIndex((space) => {
-                    return arrayEquals(space.position, this.position)
-                })
-                const defender = redTeam[defenderIndex]
-                
-                skirmish(this, defender)
-                    // then check if the game is won
-                        // end the game 
-            }
+        // if at the top of the board, cannot move forward
+        if (this.position[1]===7) {
+            output.innerHTML = 'Cannot move there.'
+            return false
+            
         }
         else {
-            console.log('space is not open')
-            return false
+            const potentialSpace = gameSpaceArray.findIndex((space) => {
+                return arrayEquals(space.position, [this.position[0], this.position[1]-1])
+            })
+            if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
+                this.y -= canvas.height/8
+                this.position[1] -=1
+                //Since we have moved, remove soldier attributes from previous space
+                gameSpaceArray[currentSpace].teamColor = ''
+                gameSpaceArray[currentSpace].currentSoldier = ''
+                // now check if opponent is there
+                if (gameSpaceArray[potentialSpace].teamColor ==='red') {
+                    // game checks if there is a battle
+                    // if yes, battle and remove inferior piece
+                    // identify the defender 
+                    const defenderIndex = redTeam.findIndex((space) => {
+                        return arrayEquals(space.position, this.position)
+                    })
+                    const defender = redTeam[defenderIndex]
+                    
+                    skirmish(this, defender)
+                        // then check if the game is won
+                            // end the game 
+                }
+            }
+            else {
+                console.log('space is not open')
+                output.innerHTML = 'Cannot move there.'
+                return false
+            }
         }
     }
     moveLeft() {
         const currentSpace = gameSpaceArray.findIndex((space) => {
             return arrayEquals(space.position, this.position)           
         })
-        
-        const potentialSpace = gameSpaceArray.findIndex((space) => {
-            return arrayEquals(space.position, [this.position[0]-1, this.position[1]])
-        })
-        if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
-            this.x -= canvas.width/8
-            this.position[0] -=1
-            //Since we have moved, remove soldier attributes from previous space
-            gameSpaceArray[currentSpace].teamColor = ''
-            gameSpaceArray[currentSpace].currentSoldier = ''
-            // now check if opponent is there
-            if (gameSpaceArray[potentialSpace].teamColor ==='red') {
-                // game checks if there is a battle
-                // if yes, battle and remove inferior piece
-                // identify the defender 
-                const defenderIndex = redTeam.findIndex((space) => {
-                    return arrayEquals(space.position, this.position)
-                })
-                const defender = redTeam[defenderIndex]
-                
-                skirmish(this, defender)
-                    // then check if the game is won
-                        // end the game 
-            }
+        // if we are in the left-most column, cannot move left
+        if (this.position[0]===0) {
+            output.innerHTML = 'Cannot move there.'
+            return false
         }
         else {
-            console.log('space is not open')
-            return false
+            const potentialSpace = gameSpaceArray.findIndex((space) => {
+                return arrayEquals(space.position, [this.position[0]-1, this.position[1]])
+            })
+            if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
+                this.x -= canvas.width/8
+                this.position[0] -=1
+                //Since we have moved, remove soldier attributes from previous space
+                gameSpaceArray[currentSpace].teamColor = ''
+                gameSpaceArray[currentSpace].currentSoldier = ''
+                // now check if opponent is there
+                if (gameSpaceArray[potentialSpace].teamColor ==='red') {
+                    // game checks if there is a battle
+                    // if yes, battle and remove inferior piece
+                    // identify the defender 
+                    const defenderIndex = redTeam.findIndex((space) => {
+                        return arrayEquals(space.position, this.position)
+                    })
+                    const defender = redTeam[defenderIndex]
+                    
+                    skirmish(this, defender)
+                        // then check if the game is won
+                            // end the game 
+                }
+            }
+            else {
+                console.log('space is not open')
+                output.innerHTML = 'Cannot move there.'
+                return false
+            }
         }
     }
-    moveRight() {
-        const currentSpace = gameSpaceArray.findIndex((space) => {
-            return arrayEquals(space.position, this.position)           
-        })
-        
-        const potentialSpace = gameSpaceArray.findIndex((space) => {
-            return arrayEquals(space.position, [this.position[0]+1, this.position[1]])
-        })
-        console.log(currentSpace, potentialSpace)
-        if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
-            this.x += canvas.width/8
-            this.position[0] +=1
-            //Since we have moved, remove soldier attributes from previous space
-            gameSpaceArray[currentSpace].teamColor = ''
-            gameSpaceArray[currentSpace].currentSoldier = ''
-            // now check if opponent is there
-            if (gameSpaceArray[potentialSpace].teamColor ==='red') {
-                // game checks if there is a battle
-                // if yes, battle and remove inferior piece
-                // identify the defender 
-                const defenderIndex = redTeam.findIndex((space) => {
-                    return arrayEquals(space.position, this.position)
-                })
-                const defender = redTeam[defenderIndex]
-                
-                skirmish(this, defender)
-                    // then check if the game is won
-                        // end the game 
+        moveRight() {
+            const currentSpace = gameSpaceArray.findIndex((space) => {
+                return arrayEquals(space.position, this.position)           
+            })
+            if (this.position[0]===7) {
+                output.innerHTML = 'Cannot move there.'
+                return false
             }
-        }
-        else {
-            console.log('space is not open')
-            return false
+            else {
+            const potentialSpace = gameSpaceArray.findIndex((space) => {
+                return arrayEquals(space.position, [this.position[0]+1, this.position[1]])
+            })
+            if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
+                this.x += canvas.width/8
+                this.position[0] +=1
+                //Since we have moved, remove soldier attributes from previous space
+                gameSpaceArray[currentSpace].teamColor = ''
+                gameSpaceArray[currentSpace].currentSoldier = ''
+                // now check if opponent is there
+                if (gameSpaceArray[potentialSpace].teamColor ==='red') {
+                    // game checks if there is a battle
+                    // if yes, battle and remove inferior piece
+                    // identify the defender 
+                    const defenderIndex = redTeam.findIndex((space) => {
+                        return arrayEquals(space.position, this.position)
+                    })
+                    const defender = redTeam[defenderIndex]
+                    
+                    skirmish(this, defender)
+                        // then check if the game is won
+                            // end the game 
+                }
+            }
+            else {
+                console.log('space is not open')
+                output.innerHTML = 'Cannot move there.'
+                return false
+            }
         }
     }
     moveBack() {
         const currentSpace = gameSpaceArray.findIndex((space) => {
             return arrayEquals(space.position, this.position)
         })
-        
-        const potentialSpace = gameSpaceArray.findIndex((space) => {
-            return arrayEquals(space.position, [this.position[0], this.position[1]+1])
-        })
-        if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
-            this.y += canvas.height/8
-            this.position[1] +=1
-            //Since we have moved, remove soldier attributes from previous space
-            gameSpaceArray[currentSpace].teamColor = ''
-            gameSpaceArray[currentSpace].currentSoldier = ''
-            // now check if opponent is there
-            if (gameSpaceArray[potentialSpace].teamColor ==='red') {
-                // game checks if there is a battle
-                // if yes, battle and remove inferior piece
-                // identify the defender 
-                const defenderIndex = redTeam.findIndex((space) => {
-                    return arrayEquals(space.position, this.position)
-                })
-                const defender = redTeam[defenderIndex]
-                
-                skirmish(this, defender)
-                    // then check if the game is won
-                        // end the game 
-            }
+        // if we are in the bottom row, we cannot move backwards
+        if (this.position[1]===0) {
+            output.innerHTML = 'Cannot move there.'
+            return false
         }
         else {
-            console.log('space is not open')
-            return false
+            const potentialSpace = gameSpaceArray.findIndex((space) => {
+                return arrayEquals(space.position, [this.position[0], this.position[1]+1])
+            })
+            if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
+                this.y += canvas.height/8
+                this.position[1] +=1
+                //Since we have moved, remove soldier attributes from previous space
+                gameSpaceArray[currentSpace].teamColor = ''
+                gameSpaceArray[currentSpace].currentSoldier = ''
+                // now check if opponent is there
+                if (gameSpaceArray[potentialSpace].teamColor ==='red') {
+                    // game checks if there is a battle
+                    // if yes, battle and remove inferior piece
+                    // identify the defender 
+                    const defenderIndex = redTeam.findIndex((space) => {
+                        return arrayEquals(space.position, this.position)
+                    })
+                    const defender = redTeam[defenderIndex]
+                    
+                    skirmish(this, defender)
+                        // then check if the game is won
+                            // end the game 
+                }
+            }
+            else {
+                console.log('space is not open')
+                output.innerHTML = 'Cannot move there.'
+                return false
+            }
         }
     }
 }
@@ -722,6 +752,7 @@ newBoard()
         })
     } else {
         console.log('cannot change configuration after the game starts. press reset to start over')
+        output.innerHTML='Cannot change configuration after game starts. Press reset to start over.'
     }
 })
 // if choose setup is picked, run the following function that will allow to 
@@ -729,7 +760,8 @@ newBoard()
 let blueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
 function playerConfiguration() {
    if (gameStarted ===false) { 
-            canvas.addEventListener('click', e => {
+        output.innerHTML=`Click on a blue soldier and type in one of the following ranks: ${blueSoldierRanks}`    
+        canvas.addEventListener('click', e => {
             const clickPosition = findPosition(e.offsetX,e.offsetY)
             let clickedSoldier = ""
             // if column and row matches that of a player soldier (blue team), 
@@ -751,11 +783,13 @@ function playerConfiguration() {
                                 clickedSoldier.rank = item
                                 blueSoldierRanks.splice(index,1)
                                 newBoard()
+                                output.innerHTML=`Need to add following ranks: ${blueSoldierRanks}`
                             } 
                         } 
                     })
                     if (blueSoldierRanks.length === 0) {
                         console.log('ready? hit start!')
+                        output.innerHTML='Ready? Hit start!'
                         gameReady = true
                         
                     }
@@ -771,6 +805,7 @@ function playerConfiguration() {
         },{once: true})
     } else {
         console.log('game has been started. cannot change configuration')
+        output.innerHTML='Game has already been started. Cannot change configuration.'
     }
 }
 // when choose setup button is clicked, player can choose setup manually
@@ -784,14 +819,17 @@ document.querySelector('#start').addEventListener('click', () => {
     if (gameStarted===false){    
         if(gameReady === true) {
             console.log('let the games begin')
+            output.innerHTML='Click on a soldier and move with WASD or the arrow keys.'
             playerTurn()
             gameStarted = true
         }
         else {
             console.log('board is not set up correctly')
+            output.innerHTML=`Cannot start game until the following ranks are added: ${blueSoldierRanks}`
+
         }
     } else {
-        console.log('you have already started the game. press reset to start over')
+        output.innerHTML='You have already started the game. Press reset if you wish to start over.'
     } 
 })
 function findSoldier(e) {
@@ -815,6 +853,7 @@ if (clickedSoldier!=="" && clickedSoldier.rank!=='f') {
     // if clicked on flag, no move can occur. 
     else if (clickedSoldier.rank ==='f') {
         console.log('cannot move the flag')
+        output.innerHTML='The flag cannot be moved'
         playerTurn()
     }
     // if there isn't a clicked soldier, we need to run the function again
@@ -852,13 +891,13 @@ function cpuTurn() {
         if (randomSoldier.alive === false) {
             continue
         }
-        const randomDirection = Math.floor(Math.random()*4)
+        const randomDirection = Math.floor(Math.random()*3)
         if (randomDirection ===0) {
             if (randomSoldier.moveForward()===false) {
                 cpuTurn = true
             } else {
                 cpuTurn = false
-                console.log('we move',randomSoldier,randomDirection)
+                
             }
         }
         if (randomDirection ===1) {
@@ -877,8 +916,6 @@ function cpuTurn() {
                 cpuTurn = true
             } else {
                 cpuTurn = false
-                console.log('we move',randomSoldier,randomDirection)
-
             }
         }
         if (randomDirection ===3) {
@@ -887,8 +924,6 @@ function cpuTurn() {
                 cpuTurn = true
             } else {
                 cpuTurn = false
-                console.log('we move',randomSoldier,randomDirection)
-
             }
         }
     }
