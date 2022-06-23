@@ -8,24 +8,33 @@
     <link rel="stylesheet" href="./styles/mystyles.css"/>
 </head>
 <body>
-    <h1>Stratego Lite</h1>
     <div id="container">
+        <h1>Stratego Lite</h1>
         <aside id="key-buttons">
-            <button id="gamemode-button">gamemode</button>
-            <button id="instructions-button">Instructions</button>
-            <button id="reset">reset</button>
-            
+            <button id="gamemode-button">Gamemode</button>
+            <div class = 'button'><a><button id="instructions-button">Instructions</button></a></div>
+            <button id="choose-setup">Choose Setup</button>
+            <button id="randomize-setup">Randomize Setup</button>
+            <button id="start">Start</button> 
+            <button id="reset">Reset</button>
         </aside>
-        
-        
         <main> 
         <canvas id="canvas"></canvas> 
         </main>
-        <aside id="temp-buttons">
-            <button id="choose-setup">Choose Setup</button>
-            <button id="randomize-setup">Randomize Setup</button>
-            <button id="start">Start</button></aside>
+        <p id="play">Set up the board, then press start.</p>
+       
     </div>
+    <section>
+        <div id="instructions" class="reveal">
+            <h2>Instructions</h2>
+            <p>Welcome to <a>Stratego</a>, the classic board game where two players face off in battle!</p>
+            <p>In order to win, eliminate all of the enemy troops OR capture the enemy flag!</p>
+            <h3>Game Rules</h3>
+            <p></p>
+            <h3>Game Set-Up</h3>
+            <p>Prior to starting the game, arrange your tokens </p>
+        </div>
+    </section>
     
     <script src="./scripts/js.js"></script>
 </body>

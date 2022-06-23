@@ -1,21 +1,77 @@
-#container {
+
+body {
+    height: 100vw;
+    width: 100vw;
+    margin: 0 auto;
     background-color: black;
+    color: black;
+}
+#container {
+    background-color: transparent;
     display: grid;
-    grid-template-rows: 2fr 10fr 2fr;
-    grid-template-columns: 2fr 10fr 2fr;
+    grid-template-rows: 100px 500px 2fr;
+    grid-template-columns: 3fr 2fr 500px 5fr;
     grid-template-areas: 
-        'topleft topmid topright'
-        'left game right'
-        'bottom bottom bottom';
-    height: 700px;
-    width: 700px;
+        'margin topleft topmid topright'
+        'margin left game right'
+        'margin botleft bottom botright';
+    height: 600px;
+    width: 600px;
+    margin: 0 auto;
 }   
+h1 {
+    color: white; 
+    grid-area: topmid;
+    font-size: 40px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-align: center;
+}
 
 main {
     grid-area: game;
 }
 #canvas {
-    background-color: darkolivegreen;
     width: 100%;
     height: 100%;
+    background-image: url('../images/wireframe.png')
 }
+button {
+    background-color: transparent;
+    color: white;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    display: block;
+    border-style: none;
+    font-size: 15px;
+    width: 100px;
+
+       
+}
+
+#key-buttons {
+    grid-area: left;
+    display: grid; 
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(1fr,6);
+}
+#play {
+    grid-area: bottom; 
+    color: white;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+#instructions > h2 {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+#instructions {
+    width: 600px;
+    margin: 200px auto;
+    
+}
+.reveal {
+    color: white;
+}
+
+
