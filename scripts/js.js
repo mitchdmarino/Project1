@@ -8,60 +8,24 @@ const ctx = canvas.getContext('2d')
 canvas.setAttribute('height', getComputedStyle(canvas)['height'])
 canvas.setAttribute('width', getComputedStyle(canvas)['width'])
 
-//  create the game board. each square will be 1/8th the width 
-//  and height of the entire board. 
-//  Make the board cover the entire canvas
-
-// create a row of squares alternating color (checkerboard)
-// render one square first 
-//     ctx.fillStyle = 'green'
-//     ctx.fillRect(0,0,canvas.width/8, canvas.height/8)
-// // second square 
-//     ctx.fillStyle = 'lightgreen'
-//     ctx.fillRect(canvas.width*1/8, 0,canvas.width/8, canvas.height/8)
-// a row of 8 squares can be rendered using:   
-// for (let i=0;i<8; i++) {
-//     if (i%2===0) {
-//         ctx.fillStyle = 'green'
-//     }
-//     else {
-//         ctx.fillStyle = 'lightgreen'
-//     }
-//     ctx.fillRect(canvas.width*i/8, 0,canvas.width/8, canvas.height/8)
-// }
-
-// apply same logic to create 8 more rows
-// add more conditions to create checkerboard appearance 
-
-// for (let i=0;i<8;i++) {
-//     for (let j=0;j<8;j++) {
-//         { if (
-//             i%2===0 && j%2===0 || 
-//             i%2>0 && j%2>0 ) {
-//                 ctx.fillStyle = 'green'
-//             }
-//             else {
-//                 ctx.fillStyle = 'lightgreen'
-//             }
-//             ctx.fillRect(canvas.width*i/8, canvas.width*j/8,canvas.width/8, canvas.height/8)}
-//     }
-// }
-// use this function to create a GameSpace class that will construct GameSpace objects. 
-
+// gamespace class 
 class GameSpace {
     constructor(column, row, color, isOpen) {
-        // the x position is the width of the entire board(canvas.width) x the column number
+        // the x position is the width of the entire board(canvas.width) times the column number
         // and divided by 8. 
         this.x = canvas.width*column/8
         this.y = canvas.height*row/8
         this.width = canvas.width/8
         this.height = canvas.height/8
+        // position on the grid: 
         this.position = findPosition(this.x, this.y) 
-        // is there a token on this space? 
-        this.color = color
+        this.color = color 
+        // movable space? 
         this.openSpace = isOpen
+        // cannot move onto a space shared by a teammate. we need to know which team color occupies the space, if any
+        this.teamColor = ""
+        // store the rank of the soldier occupying the space, if there is one
         this.currentSoldier = ""
-        
         // if openSpace = false, player won't be able to move there
     }
     renderSpace() {
@@ -71,14 +35,8 @@ class GameSpace {
         ctx.strokeRect(this.x, this.y, this.width, this.height)
     }
 }
-
-// make one square with this class 
-// const square1 = new GameSpace(0,0
-// square1.renderSpace()
-
-// make the entire gameboard using the for loop from line 36
-// we will make each square using the method outlined above,
-// but will be adding each square into an array. 
+// make the entire gameboard using for loop
+// add each space into an array to access later 
 const gameSpaceArray = []
 for (let i=0;i<8;i++) {
     for (let j=0;j<8;j++) {
@@ -91,6 +49,7 @@ for (let i=0;i<8;i++) {
             let nextSpace = new GameSpace(j,i, '#69fcff', false)
             gameSpaceArray.push(nextSpace) 
             } 
+        // create checkerboard appearance 
         else if (
             i%2===0 && j%2===0 || 
             i%2>0 && j%2>0 ) {
@@ -105,14 +64,12 @@ for (let i=0;i<8;i++) {
                  
     }
 }
-
-// render each square in the array 
+// render each square in the array to render the gameboard
 gameSpaceArray.forEach(item => {
     item.renderSpace() 
 })
 
-
-// create a class for all player pieces
+// create a class for all player pieces on each team
 
 // Blue team (player 1)
 class BlueSoldier {
@@ -121,15 +78,24 @@ class BlueSoldier {
         this.rank = rank
         this.x = x 
         this.y = y
+        // soldier status (alive or not)
         this.alive=true
         this.color = 'blue'
+        // this helps us correlate position of soldier with position on grid 
         this.position = findPosition(this.x,this.y)
     }
     //render function for the soldier
     renderSoldier() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x,this.y, canvas.width/12, canvas.height/12)
+        // blue team rank will always show
         this.showRank()
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, this.position)           
+        })
+        gameSpaceArray[currentSpace].teamColor = this.color
+        gameSpaceArray[currentSpace].currentSoldier = this.rank
+        
     }
     showRank() {
         ctx.fillStyle = 'black'
@@ -138,20 +104,98 @@ class BlueSoldier {
         ctx.fillText(this.rank, this.x+20, this.y+30)
     }
     moveForward() {
-        this.y -= canvas.height/8
-        this.position[1] -= 1
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, this.position)           
+        })
+        
+        const potentialSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, [this.position[0], this.position[1]-1])
+        })
+        if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
+            this.y -= canvas.width/8
+            this.position[1] -=1
+            //Since we have moved, remove soldier attributes from previous space
+            gameSpaceArray[currentSpace].teamColor = ''
+            gameSpaceArray[currentSpace].currentSoldier = ''
+            // now check if opponent is there
+            if (gameSpaceArray[potentialSpace].teamColor ==='red') {
+                //battle function 
+            }
+        }
+        else {
+            console.log('space is not open')
+        }
     }
     moveLeft() {
-        this.x -= canvas.width/8
-        this.position[0] -=1
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, this.position)           
+        })
+        
+        const potentialSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, [this.position[0]-1, this.position[1]])
+        })
+        if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
+            this.x -= canvas.width/8
+            this.position[0] -=1
+            //Since we have moved, remove soldier attributes from previous space
+            gameSpaceArray[currentSpace].teamColor = ''
+            gameSpaceArray[currentSpace].currentSoldier = ''
+            // now check if opponent is there
+            if (gameSpaceArray[potentialSpace].teamColor ==='red') {
+                //battle
+            }
+        }
+        else {
+            console.log('space is not open')
+        }
     }
     moveRight() {
-        this.x += canvas.width/8
-        this.position[0] +=1
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, this.position)           
+        })
+        
+        const potentialSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, [this.position[0]+1, this.position[1]])
+        })
+        console.log(currentSpace, potentialSpace)
+        if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
+            this.x += canvas.width/8
+            this.position[0] +=1
+            //Since we have moved, remove soldier attributes from previous space
+            gameSpaceArray[currentSpace].teamColor = ''
+            gameSpaceArray[currentSpace].currentSoldier = ''
+            // now check if opponent is there
+            if (gameSpaceArray[potentialSpace].teamColor ==='red') {
+                //battle
+            }
+        }
+        else {
+            console.log('space is not open')
+        }
     }
     moveBack() {
-        this.y += canvas.width/8
-        this.position[1] +=1
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            console.log(space.position, this.position)
+            return arrayEquals(space.position, this.position)
+        })
+        
+        const potentialSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, [this.position[0], this.position[1]+1])
+        })
+        if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
+            this.y += canvas.width/8
+            this.position[1] +=1
+            //Since we have moved, remove soldier attributes from previous space
+            gameSpaceArray[currentSpace].teamColor = ''
+            gameSpaceArray[currentSpace].currentSoldier = ''
+            // now check if opponent is there
+            if (gameSpaceArray[potentialSpace].teamColor ==='red') {
+                //battle
+            }
+        }
+        else {
+            console.log('space is not open')
+        }
     }
 }
 // Red Team (CPU)
@@ -170,6 +214,11 @@ class RedSoldier {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x,this.y, canvas.width/12, canvas.height/12)
         this.showRank()
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, this.position)           
+        })
+        gameSpaceArray[currentSpace].teamColor = this.color
+        gameSpaceArray[currentSpace].currentSoldier = this.rank
     }
     showRank() {
         ctx.fillStyle = 'black'
@@ -178,6 +227,7 @@ class RedSoldier {
         ctx.fillText(this.rank, this.x+20, this.y+30)
     }
     moveForward() {
+        
         this.y += canvas.height/8
         this.position[1] += 1
     }
@@ -210,7 +260,10 @@ for (let i=0; i<24; i++) {
     redTeam.push(soldier)
 }
 redTeam.forEach(item => {
+    const pos = item.position
+
     item.renderSoldier()
+    
 })
 
 const blueTeam = []
@@ -240,18 +293,9 @@ const gameLoop = function() {
         item.renderSoldier()
         // item.showRank()
     })
+    
 }
 
-// for testing 
-document.querySelector('#move-test').addEventListener('click', () => {
-    console.log('move was clicked')
-    blueTeam[23].moveForward()
-    redTeam[23].moveForward()
-    gameLoop()
-    console.log(blueTeam[23])
-    console.log(redTeam[23])
-    console.log(gameSpaceArray[23])
-})
 
 // when a player clicks, we need to know which token is being clicked
 // designate by row and column of clicking event 
@@ -310,14 +354,40 @@ function findPosition(x,y) {
             row = 7
             break
     }
-    return([column, row])
-
+    return [column, row]
     // this gives us our x and y coordinates on the grid( 
     // where X is the column# and Y is the row#)
     // can we combine these into a single 'space'? 
+
     // create an array that stores the information for each space? 
     // build that into our gameSpaceArray 
     // -- needs to have a soldier property 
+}
+// handles keyboard input 
+
+// https://stackoverflow.com/questions/8941183/pass-multiple-arguments-along-with-an-event-object-to-an-event-handler
+const movementHandler = function(item) {
+    // console.log(e.key)
+    const movementFunction = function(e) {
+        console.log(item)
+        switch(e.key) {
+            case('w'):
+                item.moveForward()
+                break
+            case('s'):
+                item.moveBack()
+                break
+            case('a'):
+                item.moveLeft()
+                break
+            case('d'):
+                item.moveRight()
+                break
+        }
+        e.stopPropagation()
+        gameLoop()
+    }
+    return movementFunction
 }
 
 // https://masteringjs.io/tutorials/fundamentals/compare-arrays
@@ -326,18 +396,33 @@ function arrayEquals(a,b) {
         Array.isArray(b) &&
         a.every((val,index) => val === b[index])
 }
-// function playerTurn() {
-    canvas.addEventListener('click', e => {
-        console.log(`${e.offsetX} is X, ${e.offsetY} is Y`)
-        const clickPosition = findPosition(e.offsetX,e.offsetY)
-        blueTeam.forEach(item => {
-            // check if the position array matches one of a token
-            if (arrayEquals(item.position, clickPosition)) {
-                console.log(item)
-            }
-            
-        })
+ // player turn. Player clicks on an soldier, and can direct that soldier left, up, right, down using wasd
+ // can only click one soldier 
+ // can only move one space 
+function playerTurn() {
+canvas.addEventListener('click', e => {
+    console.log(`${e.offsetX} is X, ${e.offsetY} is Y`)
+    const clickPosition = findPosition(e.offsetX,e.offsetY)
+    let clickedSoldier = ""
+    blueTeam.forEach(item => {
+        // check if the position array matches one of a token
+        if (arrayEquals(item.position, clickPosition)) {
+            clickedSoldier = item
+        }
     })
+    console.log(clickedSoldier)
+    
+    if (clickedSoldier) {
+        document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
+            }
+}
+// ,{once: true}
+)
+}
+function cpuTurn() {
+    
+}
+playerTurn()
 
 
 
