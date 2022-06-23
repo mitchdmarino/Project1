@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stratego Mock Instructions</title>
+    <link rel="stylesheet" href="./styles/instStyle.css">
+</head>
+<body>
+    <section>
+        <div id="instructions">             
+                <hr>
+                <h2>Instructions</h2>
+                <p><a target='blank' href="./rules/official-rules.pdf">Official Rules</a></p>
+                <hr>
+                <p>Welcome to <a id='stratego-wiki'href="https://en.wikipedia.org/wiki/Stratego" target="blank">Stratego</a>, 
+                the classic board game where two players face off in battle!
+                In order to win, eliminate all of the enemy troops OR capture the enemy flag!</p>
+                <hr>
+                <div class="instructions-img">
+                    <img id='img-one'src = './images/instructions/instructions1.png'>
+                    <ul>
+                        <li><strong>Hard Mode:</strong> Select to activate Hard Mode. Red team will configure soldier ranks strategically at start of game.
+                            Note: can only be turned off by pressing reset. </li></br>
+                        <li><strong>Instructions:</strong> links to this section. Can access before or during game.</li></br>
+                        <li><strong>Choose Setup:</strong> Can be selected before the game starts. Player can then select a blue piece and fill in the desired rank.
+                            Once all ranks are filled, player can click Start to start the game.
+                        </li></br>
+                        <li><strong>Randomize Setup:</strong> Can be selected before game start. Assigns each blue piece a random rank.  
+                        </li></br>
+                        <li><strong>Start:</strong> Click to start the game.
+                        </li></br>
+                        <li><strong>Reset:</strong> Resets all game settings and wipes the game board. All game progress is lost.</li>
+                    </ul>
+                    
+                </div>
+                <hr>
+                <div class="instructions-img">
+                    <div>
+                        <img  id='img-two'src = './images/instructions/instructions2.png' >
+                        <img id="img-three" src = './images/instructions/instructions3.png'>
+                        </div>
+                   <ul>
+                        <li>Set yourself up for victory by protecting your flag well. It's best practice to place
+                            the flag in the back row surrounded by bombs. Make sure to keep a few strong pieces near the flag in case 
+                            the enemy attacks! 
+                        </li>
+                        <li> Once setup, the flag and bombs cannot be moved.</li>
+                        <li>Capture the enemy's flag before they capture yours!</li>
+                        <li>When it is your turn, you may move a soldier (that isn't a flag or bomb) one space horizontally or vertically.
+                            Blue lake spaces are impassable, as are spaces occupied by a teammate.
+                        </li>
+                        <li><strong>To move, click on a soldier and press WASD or the Arrow Keys. If the space is valid, your character will move and 
+                            your turn will end. 
+                        </strong></li>
+                    </ul>
+                    
+                </div>
+                <hr>
+                <div>
+
+                </div>
+                <hr>
+                <div class = "instructions-img"> 
+                    <div>
+                        <img id="img-four" src="./images/instructions/instructions4.png">
+                        <img id="img-five" src="./images/instructions/instructions5.png">
+                    </div>
+                    <ul>
+                        <li>If a soldier moves onto a space occupied by the enemy, the two soldiers will fight.</li>
+                        <li>For the most part, the player with the lower number will win. 1>2,3,4..., 2>3,4,5..., etc.</li>
+                        <li>If soldiers of equal rank meet, they will both be eliminated.</li>
+                        <li>Some soldiers have <strong>special properties</strong></li>
+                        <li><strong>Marshal (rank 1): </strong>Can defeat any soldier. However, if spy attacks it first, it will be eliminated.</li>
+                        <li><strong>Spy (rank s):</strong> Can take out the enemy Marshal (rank 1) only if it (the spy) is the aggressor. Spy can only 
+                        defeat the Marshal. If it attacks any other piece or is attacked by anything, it will be eliminated.</li>
+                        <li><strong>Miner (rank 8):</strong> Can defuse and remove bombs.</li>
+                        <li><strong>Bomb (rank b):</strong> Will eliminate any moving soldier, except the Miner. Cannot Move after game starts.</li>
+                        <li><strong>Flag (rank f): </strong>If struck by any enemy, the flag is captured and the aggressor wins.</li>
+                    </ul>
+                </div>
+                <h3>To win, either capture the opponent's flag or eliminate all their movable soldiers! </h3>
+                <a href='javascript:close_window()' id="link-back">Back to Game</a>
+        </div>
+    </section>
+    <script>
+        function close_window() {
+            close();
+        }
+    </script>
+</body>
+</html>

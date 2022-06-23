@@ -1,6 +1,6 @@
 
 body {
-    height: 100vw;
+    height: 100vh;
     width: 100vw;
     margin: 0 auto;
     background-color: black;
@@ -8,7 +8,7 @@ body {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 #container {
-    background-color: transparent;
+    background-color: black;
     display: grid;
     grid-template-rows: 100px 550px 2fr;
     grid-template-columns: 1fr 550px 1fr;
@@ -16,7 +16,7 @@ body {
         ' topleft topmid topright'
         ' left game right'
         ' botleft bottom botright';
-    height: 900px;
+    height: 750px;
     width: 900px;
     margin: 0 auto;
 }   
@@ -44,7 +44,7 @@ button {
     display: block;
     border-style: none;
     font-size: 20px;
-    width: 100px;
+    width: 150px;
 }
 
 
@@ -60,47 +60,14 @@ button {
     color: white;
     font-size: 1.2em;
     text-align: center;
+    border: 2px solid white;
 }
 .selected {
     background-color: white;
     color: black;
 }
 
-#instructions > h2 {
-    display: block;
-    margin: 0 auto;
-   
-}
-#instructions {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 500px;
-    margin-bottom: 200px;
-    width: 800px;
-    color: white;
-    display: grid;
-    grid-template-columns: 3fr 1fr
-}
-.helper {
-    border: 4px solid white;
-    width: 100%;
-    background-color: white;
-}
-.helper > img {
-    max-width: 100%;
-    height: auto;
-}
-figcaption {
-    font-size: 0.8em;
-    color: black
-}
-#stratego-wiki {
-    color: white;
-}
-#link-back {
-    color: white;
-    font-size: 25px;
-}
+
 
 #captured {
     grid-area: right; 
@@ -131,4 +98,5 @@ figcaption {
 #red-box {
     border: 5px solid red
 }
+
 

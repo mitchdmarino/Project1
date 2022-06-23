@@ -1,0 +1,49 @@
+#instructions > h2 {
+    display: block;
+    margin: 0 auto;
+   
+}
+#instructions {
+    margin-left: 20px;
+    margin-right: auto;
+    margin-bottom: 200px;
+    width: 900px;
+    color: black;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+.instructions-img {
+    display: grid;
+    grid-template-columns: 5fr 4fr;
+   
+}
+.instructions-img > ul >li {
+    background-color: white;
+    color: black
+}
+#img-one {
+    max-width: 500px; 
+    height: auto;
+    border: 2px solid black;
+}
+#img-two, #img-four {
+    max-height: 220px;
+    width: auto;
+    border: 2px solid black;
+}
+#img-three, #img-five {
+    max-height: 220px;
+    width: auto;
+    border: 2px solid black; 
+    margin-left: 40px;
+}
+
+#stratego-wiki {
+    color: black;
+}
+#link-back {
+    color: black;
+    font-size: 25px;
+}
+a {
+    color: black;
+}

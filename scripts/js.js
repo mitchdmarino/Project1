@@ -11,11 +11,10 @@ canvas.setAttribute('width', getComputedStyle(canvas)['width'])
 
 const gamemodeButton = document.querySelector('#gamemode-button')
 
-const instructionsButton = document.querySelector('#instructions-button')
-const instructionsSection = document.querySelector('#instructions')
-instructionsButton.addEventListener('click', ()=> {
-    instructionsSection.scrollIntoView(true)
-})
+// const instructionsButton = document.querySelector('#instructions-button')
+// instructionsButton.addEventListener('click', ()=> {
+    
+// })
 /*-------------IMPORTANT FUNCTIONS AND BOOLEANS-------------------------------------------*/
 
 let gameStatus = true
@@ -961,6 +960,7 @@ newBoard()
             item.rank = shuffle(randBlueSoldierRanks).pop()
             newBoard()
             gameReady = true
+            output.innerHTML = 'Randomized ranks. Randomize again, reset, or press start to continue.'
         })
     } else {
         console.log('cannot change configuration after the game starts. press reset to start over')
@@ -971,7 +971,7 @@ newBoard()
 // click on a soldier, then enter a valid rank
 let blueSoldierRanks = [1,2,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,8,9,9,9,9,9,9,9,9,'s','b','b','b','b','b','b','f']
 function playerConfiguration() {
-   if (gameStarted ===false) { 
+   if (gameStarted ===false && gameReady ===false) { 
         output.innerHTML=`Click on a blue soldier and type in one of the following ranks: ${blueSoldierRanks}`    
         canvas.addEventListener('click', e => {
             const clickPosition = findPosition(e.offsetX,e.offsetY)
@@ -1015,7 +1015,10 @@ function playerConfiguration() {
                 playerConfiguration()
             }
         },{once: true})
-    } else {
+    } else if (gameStarted ===false && gameReady === true) {
+        output.innerHTML = 'Press reset to add custom configuration'
+    }
+    else {
         console.log('game has been started. cannot change configuration')
         output.innerHTML='Game has already been started. Cannot change configuration.'
     }
