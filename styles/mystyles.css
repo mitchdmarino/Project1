@@ -34,7 +34,8 @@ main {
 #canvas {
     width: 100%;
     height: 100%;
-    background-image: url('../images/wireframe.png')
+    background-image: url('../images/background-3.png');
+    background-size: contain;
 }
 button {
     background-color: transparent;

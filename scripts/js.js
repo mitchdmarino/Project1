@@ -365,8 +365,8 @@ class GameSpace {
         // if openSpace = false, player won't be able to move there
     }
     renderSpace() {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        // ctx.fillStyle = this.color
+        // ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.strokeStyle = 'black'
         ctx.strokeRect(this.x, this.y, this.width, this.height)
     }
