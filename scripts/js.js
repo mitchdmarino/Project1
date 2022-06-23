@@ -1041,7 +1041,7 @@ document.querySelector('#start').addEventListener('click', () => {
         }
         else {
             console.log('board is not set up correctly')
-            output.innerHTML=`Cannot start game until the following ranks are added: ${blueSoldierRanks}`
+            output.innerHTML=`Cannot start game until the following ranks are added: ${blueSoldierRanks.join(', ')}`
 
         }
     } else {
