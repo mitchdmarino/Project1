@@ -10,9 +10,7 @@ canvas.setAttribute('height', getComputedStyle(canvas)['height'])
 canvas.setAttribute('width', getComputedStyle(canvas)['width'])
 
 const gamemodeButton = document.querySelector('#gamemode-button')
-gamemodeButton.addEventListener('click', ()=> {
-    output.innerHTML = 'No other gamemodes available. Try again in the future.'
-})
+
 const instructionsButton = document.querySelector('#instructions-button')
 const instructionsSection = document.querySelector('#instructions')
 instructionsButton.addEventListener('click', ()=> {
@@ -333,13 +331,58 @@ const blueCapturedOutput =document.querySelector('#blueCaptured')
 const intel = function(defeatedSoldier) {
     if (defeatedSoldier.color==='red') {
         defeatedRedTeam.push(defeatedSoldier.rank)
-        redCapturedOutput.innerHTML = defeatedRedTeam
+        redCapturedOutput.innerHTML = defeatedRedTeam.join(', ')
         }
     else {
         defeatedBlueTeam.push(defeatedSoldier.rank)
-        blueCapturedOutput.innerHTML = defeatedBlueTeam
+        blueCapturedOutput.innerHTML = defeatedBlueTeam.join(', ')
     }
+    // add function to end game if all movable pieces are captured. 
+    let blueMoves = []
+    let redMoves = []
+    blueTeam.forEach(item => {
+        
+        if (item.alive===true) {
+            // for all the pieces remaining, check if there is a 1,2,3,4,5,6,7,8,9,s
+            if (item.rank===1 || item.rank===2 || item.rank===3 || 
+                item.rank===4 || item.rank===5 || item.rank===6 ||
+                item.rank===7 || item.rank===8 || item.rank===9 ||
+                item.rank==='s') {
+                    // add to blue moves 
+                    blueMoves.push(item.rank)
+                    
+                }
+        }
+        
+    })
+    // if bluemoves is empty, blue has no more moveable pieces. game over. 
+    if (blueMoves.length === 0) {
+        gameStatus = false
+    }
+    redTeam.forEach(item => {
+        
+        if (item.alive===true) {
+            // for all the pieces remaining, check if there is a 1,2,3,4,5,6,7,8,9,s
+            if (item.rank===1 || item.rank===2 || item.rank===3 || 
+                item.rank===4 || item.rank===5 || item.rank===6 ||
+                item.rank===7 || item.rank===8 || item.rank===9 ||
+                item.rank==='s') {
+                    // add to blue moves 
+                    redMoves.push(item.rank)
+                    
+                }
+        }
+        
+    })
+    // if redmoves is empty, red has no more moveable pieces. game over. 
+    if (redMoves.length === 0) {
+        gameStatus = false
+    }
+    console.log(redMoves.length)
 }
+
+ 
+
 
 /*---------------GAME FLOW --------------------------------------------------------------------*/
 
@@ -628,7 +671,7 @@ class RedSoldier {
         this.alive=true
         this.color = 'red'
         this.position = findPosition(this.x,this.y)
-        this.revealed = false
+        this.revealed = true
     }
     //render function for the soldier
     renderSoldier() {
@@ -827,9 +870,58 @@ for (let i=0; i<40; i++) {
     redTeam.push(soldier)
 }
 // randomize configuration of pieces 
+
+// for difficulty hard, choose random of the following arrays instead 
+
 redTeam.forEach(item => {
     item.rank = shuffle(redSoldierRanks).pop()
 })
+gamemodeButton.addEventListener('click', ()=> {
+    gamemodeButton.classList.add('selected')
+    const redSoldierLayouts = [
+        [5,9,9,6,9,5,8,1,9,5,
+        6,7,'b','s',2,9,4,4,3,9,
+        7,'b',7,4,3,6,'b',6,5,7,
+        9,8,'b',9,8,'b','f','b',8,8],
+        [1,5,6,8,9,5,9,9,9,5,
+        7,9,3,3,2,9,7,'b','b',6,
+        4,9,4,'s',5,6,'b',7,6,9,
+        4,8,8,8,7,'b','f','b','b',8],
+        [5,9,7,2,5,9,9,1,9,5,
+        6,9,4,6,'b',9,4,4,3,8,
+        7,3,'s',8,'b',9,5,6,6,'b',
+        8,'b',7,'b',7,9,8,8,'b','f'],
+        [9,3,6,9,5,9,2,8,9,5,
+        1,9,4,3,9,5,'b',6,'b',6,
+        5,7,4,'s',4,6,'b',7,'b',7,
+        8,9,8,8,7,'b','f','b',8,9],
+        [9,9,'b','f','b','b',7,9,9,9,
+        4,2,3,'b',1,4,'b',8,3,4,
+        6,7,5,5,8,8,5,9,5,6,
+        9,7,8,6,9,'s',7,'b',6,8],
+        ['b',2,'s',3,9,6,8,3,9,6,
+        7,'b',8,5,8,1,9,9,4,9,
+        'b',7,'b',9,9,6,7,5,9,5,
+        'f','b',7,'b',5,8,8,8,6,4],
+        [9,9,8,4,'b','b',7,7,'b','b',
+        2,3,'s',8,5,3,5,5,4,7,
+        'b',1,6,8,8,4,5,6,6,6,
+        'f','b',9,9,9,9,9,9,8,7]
+    ]
+    if (gameStarted===true) {
+        output.innerHTML= 'Press restart to change difficulty'
+    }
+    else {
+        let randomLayout=Math.floor(Math.random()*7)
+        console.log(randomLayout)
+        redTeam.forEach(item => {
+            item.rank = redSoldierLayouts[randomLayout].pop()
+            newBoard()
+        })
+        output.innerHTML= 'Hard Mode Selected. CPU will be smart during setup.'
+    }
+})
+
 
 let blueTeam = []
 // start i=63 and go to 39 to fill the bottom 4 rows of the gameboard
@@ -1065,6 +1157,7 @@ function cpuTurn() {
 
 document.querySelector('#reset').addEventListener('click', () => {
     console.log('reset')
+    gamemodeButton.classList.remove('selected')
     output.innerHTML = 'Set up the board by clicking Choose Setup or Random Setup.'
     // remove event listener from canvas 
     canvas.removeEventListener('click', findSoldier )
@@ -1131,6 +1224,7 @@ document.querySelector('#reset').addEventListener('click', () => {
     
     // render the initial board
     newBoard()
+    
     
     
 
