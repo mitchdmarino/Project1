@@ -69,6 +69,26 @@ gameSpaceArray.forEach(item => {
     item.renderSpace() 
 })
 
+// array to store all possible soldier ranks 
+const soldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'F']
+// user Fisher-Yates Shuffle 
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+  }
 // create a class for all player pieces on each team
 
 // Blue team (player 1)
@@ -124,6 +144,7 @@ class BlueSoldier {
         }
         else {
             console.log('space is not open')
+            return false
         }
     }
     moveLeft() {
@@ -147,6 +168,7 @@ class BlueSoldier {
         }
         else {
             console.log('space is not open')
+            return false
         }
     }
     moveRight() {
@@ -171,11 +193,11 @@ class BlueSoldier {
         }
         else {
             console.log('space is not open')
+            return false
         }
     }
     moveBack() {
         const currentSpace = gameSpaceArray.findIndex((space) => {
-            console.log(space.position, this.position)
             return arrayEquals(space.position, this.position)
         })
         
@@ -195,9 +217,11 @@ class BlueSoldier {
         }
         else {
             console.log('space is not open')
+            return false
         }
     }
 }
+
 // Red Team (CPU)
 class RedSoldier {
     static total = 24
@@ -227,21 +251,127 @@ class RedSoldier {
         ctx.fillText(this.rank, this.x+20, this.y+30)
     }
     moveForward() {
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, this.position)           
+        })
         
-        this.y += canvas.height/8
-        this.position[1] += 1
+        const potentialSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, [this.position[0], this.position[1]+1])
+        })
+        if (potentialSpace!==-1) {
+            if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'red') {
+                this.y += canvas.height/8
+                this.position[1] +=1
+                //Since we have moved, remove soldier attributes from previous space
+                gameSpaceArray[currentSpace].teamColor = ''
+                gameSpaceArray[currentSpace].currentSoldier = ''
+                // now check if opponent is there
+                if (gameSpaceArray[potentialSpace].teamColor ==='blue') {
+                    //battle function 
+                }
+            }
+            else {
+                console.log('space is not open')
+                return false
+            }
+        }
+       
+        else {
+            console.log('space is not open')
+            return false
+        }
     }
     moveLeft() {
-        this.x += canvas.width/8
-        this.position[0] +=1
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, this.position)           
+        })
+        
+        const potentialSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, [this.position[0]+1, this.position[1]])
+        })
+        if (potentialSpace!== -1) {
+            if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'red') {
+                this.x += canvas.width/8
+                this.position[0] +=1
+                //Since we have moved, remove soldier attributes from previous space
+                gameSpaceArray[currentSpace].teamColor = ''
+                gameSpaceArray[currentSpace].currentSoldier = ''
+                // now check if opponent is there
+                if (gameSpaceArray[potentialSpace].teamColor ==='blue') {
+                    //battle
+                }
+            } else {
+                console.log('space is not open')
+                return false
+            }
+        }
+       
+        else {
+            console.log('space is not open')
+            return false
+        }
     }
     moveRight() {
-        this.x -= canvas.width/8
-        this.position[0] -=1
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, this.position)           
+        })
+        
+        const potentialSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, [this.position[0]-1, this.position[1]])
+        })
+        if (potentialSpace!== -1) {
+            if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'red') {
+                this.x -= canvas.width/8
+                this.position[0] -=1
+                //Since we have moved, remove soldier attributes from previous space
+                gameSpaceArray[currentSpace].teamColor = ''
+                gameSpaceArray[currentSpace].currentSoldier = ''
+                // now check if opponent is there
+                if (gameSpaceArray[potentialSpace].teamColor ==='blue') {
+                    //battle
+                }
+            }
+            else {
+                console.log('space is not open')
+                return false
+            }
+        }
+        
+        else {
+            console.log('space is not open')
+            return false
+        }
     }
     moveBack() {
-        this.y -= canvas.width/8
-        this.position[1] -=1
+        const currentSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, this.position)
+        })
+        
+        const potentialSpace = gameSpaceArray.findIndex((space) => {
+            return arrayEquals(space.position, [this.position[0], this.position[1]-1])
+        })
+        if (potentialSpace!==-1) {
+            if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'red') {
+                this.y -= canvas.height/8
+                this.position[1] -=1
+                //Since we have moved, remove soldier attributes from previous space
+                gameSpaceArray[currentSpace].teamColor = ''
+                gameSpaceArray[currentSpace].currentSoldier = ''
+                // now check if opponent is there
+                if (gameSpaceArray[potentialSpace].teamColor ==='blue') {
+                    //battle
+                }
+            }
+            else {
+                console.log('space is not open')
+                return false
+            }
+        }
+        
+        else {
+            console.log('space is not open')
+            return false
+        }
     }
 }
 
@@ -261,7 +391,7 @@ for (let i=0; i<24; i++) {
 }
 redTeam.forEach(item => {
     const pos = item.position
-
+    item.rank = shuffle(soldierRanks).pop()
     item.renderSoldier()
     
 })
@@ -279,7 +409,8 @@ blueTeam.forEach(item => {
     // item.showRank()
 })
 
-const gameLoop = function() {
+  
+const newBoard = function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     // re render the game board 
     gameSpaceArray.forEach(item => {
@@ -369,23 +500,26 @@ function findPosition(x,y) {
 const movementHandler = function(item) {
     // console.log(e.key)
     const movementFunction = function(e) {
-        console.log(item)
         switch(e.key) {
             case('w'):
+            case('ArrowUp'):
                 item.moveForward()
                 break
             case('s'):
+            case('ArrowDown'):
                 item.moveBack()
                 break
             case('a'):
+            case('ArrowLeft'):
                 item.moveLeft()
                 break
             case('d'):
+            case('ArrowRight'):
                 item.moveRight()
                 break
         }
         e.stopPropagation()
-        gameLoop()
+        newBoard()
     }
     return movementFunction
 }
@@ -400,32 +534,79 @@ function arrayEquals(a,b) {
  // can only click one soldier 
  // can only move one space 
 function playerTurn() {
-canvas.addEventListener('click', e => {
-    console.log(`${e.offsetX} is X, ${e.offsetY} is Y`)
-    const clickPosition = findPosition(e.offsetX,e.offsetY)
-    let clickedSoldier = ""
-    blueTeam.forEach(item => {
-        // check if the position array matches one of a token
-        if (arrayEquals(item.position, clickPosition)) {
-            clickedSoldier = item
-        }
-    })
-    console.log(clickedSoldier)
-    
-    if (clickedSoldier) {
-        document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
+    canvas.addEventListener('click', e => {
+        console.log(`${e.offsetX} is X, ${e.offsetY} is Y`)
+        const clickPosition = findPosition(e.offsetX,e.offsetY)
+        let clickedSoldier = ""
+        blueTeam.forEach(item => {
+            // check if there is a blue soldier on that position
+            if (arrayEquals(item.position, clickPosition)) {
+                clickedSoldier = item
             }
-}
-// ,{once: true}
-)
+        })
+        console.log(clickedSoldier)
+        
+        if (clickedSoldier) {
+            document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
+        }
+    },{once: true})
 }
 function cpuTurn() {
+    let cpuTurn = true 
+    while (cpuTurn === true) {
+        const randomSoldier = redTeam[Math.floor(Math.random()*redTeam.length)];
+        if (randomSoldier.rank === 'F') {
+            continue
+        }
+        const randomDirection = Math.floor(Math.random()*4)
+        if (randomDirection ===0) {
+            if (randomSoldier.moveForward()===false) {
+                cpuTurn = true
+            } else {
+                cpuTurn = false
+                console.log('we move',randomSoldier,randomDirection)
+            }
+        }
+        if (randomDirection ===1) {
+            if (randomSoldier.moveBack()===false) {
+                cpuTurn = true
+            } else {
+                cpuTurn = false
+                console.log('we move',randomSoldier,randomDirection)
+
+            }
+        }
+        if (randomDirection ===2) {
+            
+            if (randomSoldier.moveLeft()===false) {
+                cpuTurn = true
+            } else {
+                cpuTurn = false
+                console.log('we move',randomSoldier,randomDirection)
+
+            }
+        }
+        if (randomDirection ===3) {
+            
+            if (randomSoldier.moveRight()===false) {
+                cpuTurn = true
+            } else {
+                cpuTurn = false
+                console.log('we move',randomSoldier,randomDirection)
+
+            }
+        }
+    }
+    newBoard()
+}
+function gameLoop() {
+    playerTurn()
+    setInterval(cpuTurn, 20)
     
 }
-playerTurn()
 
 
-
+gameLoop()
 
 
 
