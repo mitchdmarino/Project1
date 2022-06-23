@@ -1,19 +1,21 @@
 #container {
-    background-color: burlywood;
+    background-color: black;
     display: grid;
-    grid-template-rows: 1fr 10fr 1fr;
-    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 2fr 10fr 2fr;
+    grid-template-columns: 2fr 10fr 2fr;
     grid-template-areas: 
         'topleft topmid topright'
-        'game game game'
+        'left game right'
         'bottom bottom bottom';
-    height: 400px;
-    width: 400px;
+    height: 700px;
+    width: 700px;
 }   
 
 main {
     grid-area: game;
 }
 #canvas {
-    background-color: gray;
+    background-color: darkolivegreen;
+    width: 100%;
+    height: 100%;
 }
