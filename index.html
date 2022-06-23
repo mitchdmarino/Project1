@@ -12,7 +12,7 @@
         <h1>Stratego Lite</h1>
         <aside id="key-buttons">
             <button id="gamemode-button">Gamemode</button>
-            <div class = 'button'><a><button id="instructions-button">Instructions</button></a></div>
+            <button id="instructions-button">Instructions</button>
             <button id="choose-setup">Choose Setup</button>
             <button id="randomize-setup">Randomize Setup</button>
             <button id="start">Start</button> 
@@ -21,18 +21,68 @@
         <main> 
         <canvas id="canvas"></canvas> 
         </main>
-        <p id="play">Set up the board, then press start.</p>
+        <p id="play">Set up the board, then press start. </br>Click on instructions for help 🤠</p>
        
     </div>
+    
     <section>
-        <div id="instructions" class="reveal">
-            <h2>Instructions</h2>
-            <p>Welcome to <a>Stratego</a>, the classic board game where two players face off in battle!</p>
-            <p>In order to win, eliminate all of the enemy troops OR capture the enemy flag!</p>
-            <h3>Game Rules</h3>
-            <p></p>
-            <h3>Game Set-Up</h3>
-            <p>Prior to starting the game, arrange your tokens </p>
+        <div id="instructions">
+            <div id="instruct-words">  
+                <hr>
+                <h2>Instructions</h2>
+                <hr>
+                <p>Welcome to <a id='stratego-wiki'href="https://en.wikipedia.org/wiki/Stratego" target="blank">Stratego</a>, the classic board game where two players face off in battle!
+                In order to win, eliminate all of the enemy troops OR capture the enemy flag!</p>
+                <h3>Game Rules</h3>
+                <h4>Turns</h4>
+                <p>Each player sets up their board. Each player alternates turns. During a turn, a player moves one of their tokens
+                    one space in the horizontal or vertical direction. Players cannot move to a space 
+                    if it is already occupied by a friendly (same color) token. Lake spaces in the middle of the board 
+                    are also impassable.                
+                </br>
+                </br>
+                If a player moves their token onto a space occupied by the other team, each token will battle. The token with the stronger rank will win. 
+                    In this version, the lower number is considered stronger and will win. 
+                    For example, a 1 beats 2,3,4,5... , a 2 beats 3,4,5... and so on. 
+                
+                The rank of opposing soldiers is not revealed until battle is initiated with them.</p>
+                <h4>Winning</h4>
+                <p>Win the game by capturing the opponents flag, or by eliminating all of their movable pieces.
+
+                </p>
+                <h3>Game Set-Up</h3>
+                <p>Prior to starting the game, arrange your tokens in a custom configuration by selecting 'Choose Setup'.
+                    If inputting soldier ranks manually, select a token and type in the desired rank (1-7, or 'f' for flag)
+                    to input that soldier's rank. Once a token's rank is set, the only way to reset is by hitting the 'reset' button, 
+                    so choose your ranks wisely! 
+                    Note: if you have already added the maximum number of a certain rank, you will not be able to add that rank again unless you reset.
+                    The army must consist of the following to start the game: 
+                    <ul>
+                        <li>1 Marshall, rank 1</li>
+                        <li>1 General, rank 2</li>
+                        <li>3 Colonels, rank 3</li>
+                        <li>4 Majors, rank 4</li>
+                        <li>4 Captains, rank 5</li>
+                        <li>5 Lieutenants, rank 6</li>
+                        <li>5 Sergeants, rank 7</li>
+                    </ul>
+
+                </br>
+                    If desired, select random-configuration to set up tokens randomly. 
+                    Once you are satisfied with your setup, click 'Start' to begin. 
+                    
+                </p>
+                <h4>Strategy</h4>
+                <p></p>
+            </div>
+            <div id="instruct-images">
+                <figure class="helper">
+                    <img src="./images/movement.png">
+                    <figcaption>Player can move any direction on the horizontal or vertical axis, as long as 
+                        it isn't blocked by the water or a teammate.
+                    </figcaption>
+                </figure>
+            </div>
         </div>
     </section>
     

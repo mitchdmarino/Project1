@@ -14,6 +14,11 @@ gamemodeButton.addEventListener('click', ()=> {
     output.innerHTML = 'No other gamemodes available. Try again in the future.'
 })
 const instructionsButton = document.querySelector('#instructions-button')
+const instructionsSection = document.querySelector('#instructions')
+instructionsButton.addEventListener('click', ()=> {
+    instructionsSection.scrollIntoView(true)
+    instructionsSection.classList.add('reveal')
+})
 /*-------------IMPORTANT FUNCTIONS AND BOOLEANS-------------------------------------------*/
 
 let gameStatus = true
