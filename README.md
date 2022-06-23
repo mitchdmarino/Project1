@@ -45,7 +45,7 @@ HTML, CSS, JavaScript, HTML 5 Canvas
 
 # WireFrame 
 
-![Stratego Lite](https://i.imgur.com/ktQuvv4.png)
+![Stratego Lite](./images/Stratego%20Lite%20wireframe.png)
 
 # Minimum Viable Product
 
@@ -57,12 +57,13 @@ The minimum viable product will be 'Stratego-Lite.' It is not as complex as the 
 * Each player gets 24 soldiers, they can place them however they like within the first three rows of their side. 
 * DO NOT INCLUDE SPECIAL SOLDIERS. Only include soldiers rank 1-6. There will be no bombs, no spies, no miners, no scouts. Soldiers only win a battle by being a stronger rank. 
     - Soldiers: 
-        * Marshal   Rank 1    (total: 1)
-        * General   Rank 2    (total: 1)
-        * Colonel   Rank 3    (total: 3)
-        * Major     Rank 4    (total: 4)
-        * Captain   Rank 6    (total: 5)
-        * Lieutenant Rank 7   (total: 6)
+        * Marshal       Rank 1    (total: 1)
+        * General       Rank 2    (total: 1)
+        * Colonel       Rank 3    (total: 3)
+        * Major         Rank 4    (total: 4)
+        * Captain       Rank 5    (total: 4)
+        * Lieutenant    Rank 6    (total: 5)
+        * Sergeant      Rank 7    (total: 5)
     - May have to tinker with totals to fine tune gameplay
 * Tokens will be displayed by a number in a square or circle. Player will be able to move these tokens where they want. 
 * Ability for player to confirm their initial configuration. 
