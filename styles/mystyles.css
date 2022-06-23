@@ -1,0 +1,19 @@
+#container {
+    background-color: burlywood;
+    display: grid;
+    grid-template-rows: 1fr 10fr 1fr;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-areas: 
+        'topleft topmid topright'
+        'game game game'
+        'bottom bottom bottom';
+    height: 400px;
+    width: 400px;
+}   
+
+main {
+    grid-area: game;
+}
+#canvas {
+    background-color: gray;
+}
