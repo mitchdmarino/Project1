@@ -11,6 +11,8 @@ canvas.setAttribute('width', getComputedStyle(canvas)['width'])
 /*-------------IMPORTANT FUNCTIONS AND BOOLEANS-------------------------------------------*/
 
 let gameStatus = true
+let gameReady = false
+let gameStarted = false
 // https://masteringjs.io/tutorials/fundamentals/compare-arrays
 // function to compare arrays, returns true if two arrays equal
 function arrayEquals(a,b) {
@@ -156,6 +158,7 @@ const movementHandler = function(item) {
                     playerTurn()
                 }
                 else {
+                    console.log('player turn is over')
                     if (gameStatus ===true) {
                         setTimeout(cpuTurn,2000)
                     } else {
@@ -168,6 +171,7 @@ const movementHandler = function(item) {
                 if (item.moveLeft()===false){
                     playerTurn()
                 } else {
+                    console.log('player turn is over')
                     if (gameStatus ===true) {
                         setTimeout(cpuTurn,2000)
                     } else {
@@ -180,6 +184,7 @@ const movementHandler = function(item) {
                 if (item.moveRight()===false) {
                     playerTurn()
                 } else {
+                    console.log('player turn is over')
                     if (gameStatus ===true) {
                         setTimeout(cpuTurn,2000)
                     } else {
@@ -205,7 +210,7 @@ const skirmish = function(attackingPiece, defendingPiece) {
     const fightingSpace = gameSpaceArray[fightingSpacePosition]
     if (defendingPiece.rank === 'f') {
         gameStatus = false
-        console.log(`${attackingPiece.color} wins!`)
+        console.log(`The flag has been captured! ${attackingPiece.color} wins!`)
     }
     // if the defender has a weaker (higher number) rank, he loses and is removed. 
     else if (defendingPiece.rank>attackingPiece.rank) {
@@ -264,7 +269,7 @@ class GameSpace {
 }
 // make an array of the entire gameboard using for loop
 // added to array for easy access/manipulation
-const gameSpaceArray = []
+let gameSpaceArray = []
 for (let i=0;i<8;i++) {
     for (let j=0;j<8;j++) {
         //We have designated "lake" spaces that are not passable. Make them lightblue. 
@@ -354,7 +359,7 @@ class BlueSoldier {
                     return arrayEquals(space.position, this.position)
                 })
                 const defender = redTeam[defenderIndex]
-                console.log(defender)
+                
                 skirmish(this, defender)
                     // then check if the game is won
                         // end the game 
@@ -388,7 +393,7 @@ class BlueSoldier {
                     return arrayEquals(space.position, this.position)
                 })
                 const defender = redTeam[defenderIndex]
-                console.log(defender)
+                
                 skirmish(this, defender)
                     // then check if the game is won
                         // end the game 
@@ -423,7 +428,7 @@ class BlueSoldier {
                     return arrayEquals(space.position, this.position)
                 })
                 const defender = redTeam[defenderIndex]
-                console.log(defender)
+                
                 skirmish(this, defender)
                     // then check if the game is won
                         // end the game 
@@ -457,7 +462,7 @@ class BlueSoldier {
                     return arrayEquals(space.position, this.position)
                 })
                 const defender = redTeam[defenderIndex]
-                console.log(defender)
+                
                 skirmish(this, defender)
                     // then check if the game is won
                         // end the game 
@@ -531,13 +536,13 @@ class RedSoldier {
                 }
             }
             else {
-                console.log('space is not open')
+    
                 return false
             }
         }
        
         else {
-            console.log('space is not open')
+
             return false
         }
     }
@@ -570,13 +575,13 @@ class RedSoldier {
                             // end the game 
                 }
             } else {
-                console.log('space is not open')
+    
                 return false
             }
         }
        
         else {
-            console.log('space is not open')
+
             return false
         }
     }
@@ -610,13 +615,13 @@ class RedSoldier {
                 }
             }
             else {
-                console.log('space is not open')
+    
                 return false
             }
         }
         
         else {
-            console.log('space is not open')
+
             return false
         }
     }
@@ -650,18 +655,18 @@ class RedSoldier {
                 }
             }
             else {
-                console.log('space is not open')
+    
                 return false
             }
         }
         
         else {
-            console.log('space is not open')
+
             return false
         }
     }
 }
-const redTeam = []
+let redTeam = []
 for (let i=0; i<24; i++) {
     let newX = gameSpaceArray[i].x + 10
     let newY = gameSpaceArray[i].y + 10
@@ -673,7 +678,7 @@ redTeam.forEach(item => {
     item.rank = shuffle(redSoldierRanks).pop()
 })
 
-const blueTeam = []
+let blueTeam = []
 // start i=63 and go to 39 to fill the bottom 4 rows of the gameboard
 // (since gamespaceArray[39-63] is the bottom 4 rows of the gameboard)
 for (let i=63; i>39; i--) {
@@ -689,96 +694,123 @@ for (let i=63; i>39; i--) {
 // render the initial board
 newBoard()
 
-// add customized rank to each blue piece. 
-// click on a soldier, then click on a rank to add the corresponding rank
-const blueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
-function playerConfiguration() {
-    // if random button is clicked, add random ranks (just for ease of testing)
-    document.querySelector('#randomize-setup').addEventListener('click', () => {
-        let randBlueSoldierRanks = []
-        randBlueSoldierRanks = shuffle(blueSoldierRanks)
+ // if random button is clicked, add random ranks (just for ease of testing)
+ document.querySelector('#randomize-setup').addEventListener('click', () => {
+    if (gameStarted===false) {    
+        let randBlueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
         blueTeam.forEach(item => {
-            item.rank = randBlueSoldierRanks.pop()
-            random = true
+            item.rank = shuffle(randBlueSoldierRanks).pop()
             newBoard()
+            gameReady = true
         })
-    }, {once: true})
-    canvas.addEventListener('click', e => {
-        const clickPosition = findPosition(e.offsetX,e.offsetY)
-        let clickedSoldier = ""
-        // if column and row matches that of a player soldier (blue team), 
-        // we select that soldier as "clickedSoldier"
-        blueTeam.forEach(item => {
-            // check if there is a blue soldier on that position
-            if (arrayEquals(item.position, clickPosition)) {
-                clickedSoldier = item
-            }
-        })
-        console.log(clickedSoldier)
-        // if there is a clicked soldier, add event listener
-        if (clickedSoldier!=="") {
-            document.addEventListener('keydown', e=> {
-                console.log(clickedSoldier)
-                blueSoldierRanks.forEach((item, index) => {
-                    if (clickedSoldier.rank==='#') {    
-                        if (item == e.key) {
-                            clickedSoldier.rank = item
-                            console.log(blueSoldierRanks)
-                            blueSoldierRanks.splice(index,1)
-                            newBoard()
+    } else {
+        console.log('cannot change configuration after the game starts. press reset to start over')
+    }
+})
+// if choose setup is picked, run the following function that will allow to 
+// click on a soldier, then enter a valid rank
+let blueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+function playerConfiguration() {
+   if (gameStarted ===false) { 
+            canvas.addEventListener('click', e => {
+            const clickPosition = findPosition(e.offsetX,e.offsetY)
+            let clickedSoldier = ""
+            // if column and row matches that of a player soldier (blue team), 
+            // we select that soldier as "clickedSoldier"
+            blueTeam.forEach(item => {
+                // check if there is a blue soldier on that position
+                if (arrayEquals(item.position, clickPosition)) {
+                    clickedSoldier = item
+                }
+            })
+            console.log(clickedSoldier)
+            // if there is a clicked soldier, add event listener
+            if (clickedSoldier!=="") {
+                document.addEventListener('keydown', e=> {
+                    console.log(clickedSoldier)
+                    blueSoldierRanks.forEach((item, index) => {
+                        if (clickedSoldier.rank==='#') {    
+                            if (item == e.key) {
+                                clickedSoldier.rank = item
+                                blueSoldierRanks.splice(index,1)
+                                newBoard()
+                            } 
                         } 
-                    } 
-                })
-                if (blueSoldierRanks.length === 0) {
-                    console.log('let the games begin')
-                    playerTurn()
-                    
-                }
-                else {
-                    playerConfiguration()
-                }
-            }, {once: true})
+                    })
+                    if (blueSoldierRanks.length === 0) {
+                        console.log('ready? hit start!')
+                        gameReady = true
+                        
+                    }
+                    else {
+                        playerConfiguration()
+                    }
+                }, {once: true})
 
-        }
-        else {
-            playerConfiguration()
-        }
-    },{once: true})
-}
-
-
-
-function playerTurn() {
-    // add click event listener
-    canvas.addEventListener('click', e => {
-        console.log(`${e.offsetX} is X, ${e.offsetY} is Y`)
-        // use findPosition to get column and row 
-        const clickPosition = findPosition(e.offsetX,e.offsetY)
-        let clickedSoldier = ""
-        // if column and row matches that of a player soldier (blue team), 
-        // we select that soldier as "clickedSoldier"
-        blueTeam.forEach(item => {
-            // check if there is a blue soldier on that position
-            if (arrayEquals(item.position, clickPosition)) {
-                clickedSoldier = item
             }
-        })
-        console.log(clickedSoldier)
-        // if there is a clicked soldier that isn't the flag, add event listener
-       if (clickedSoldier!=="" && clickedSoldier.rank!=='f') {
-            document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
-        }
-        // if clicked on flag, no move can occur. 
-        else if (clickedSoldier.rank ==='f') {
-            console.log('cannot move the flag')
-            playerTurn()
-        }
-        // if there isn't a clicked soldier, we need to run the function again
-        else {
-            playerTurn()
-        }
-    },{once: true})
+            else {
+                playerConfiguration()
+            }
+        },{once: true})
+    } else {
+        console.log('game has been started. cannot change configuration')
+    }
 }
+// when choose setup button is clicked, player can choose setup manually
+document.getElementById('choose-setup').addEventListener('click', playerConfiguration)
+
+// when start button is clicked, make sure gameBoard is setup correctly
+// then start playerTurn. 
+// remove start and randomize buttons
+
+document.querySelector('#start').addEventListener('click', () => {
+    if (gameStarted===false){    
+        if(gameReady === true) {
+            console.log('let the games begin')
+            playerTurn()
+            gameStarted = true
+            // remove start and randomize buttons
+        }
+        else {
+            console.log('board is not set up correctly')
+        }
+    } else {
+        console.log('you have already started the game. press reset to start over')
+    } 
+})
+
+function playerTurn() {   
+        // add click event listener
+        canvas.addEventListener('click', e => {
+            console.log(`${e.offsetX} is X, ${e.offsetY} is Y`)
+            // use findPosition to get column and row 
+            const clickPosition = findPosition(e.offsetX,e.offsetY)
+            let clickedSoldier = ""
+            // if column and row matches that of a player soldier (blue team), 
+            // we select that soldier as "clickedSoldier"
+            blueTeam.forEach(item => {
+                // check if there is a blue soldier on that position
+                if (arrayEquals(item.position, clickPosition)) {
+                    clickedSoldier = item
+                }
+            })
+            console.log(clickedSoldier)
+            // if there is a clicked soldier that isn't the flag, add event listener
+        if (clickedSoldier!=="" && clickedSoldier.rank!=='f') {
+                document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
+            }
+            // if clicked on flag, no move can occur. 
+            else if (clickedSoldier.rank ==='f') {
+                console.log('cannot move the flag')
+                playerTurn()
+            }
+            // if there isn't a clicked soldier, we need to run the function again
+            else {
+                playerTurn()
+            }
+        },{once: true})
+}
+
 // player moves the piece
 // ** must be valid space, or has to try again (call the function again ->
 // if the move is invalid )**    
@@ -861,4 +893,63 @@ function cpuTurn() {
 
         // move on to player turn 
 
-playerConfiguration()
+
+document.querySelector('#reset').addEventListener('click', () => {
+   console.log('reset')
+    gameStatus = true
+    gameReady = false 
+    gameStarted = false
+    // reset every array and rerender the items in them
+    gameSpaceArray = []
+    for (let i=0;i<8;i++) {
+        for (let j=0;j<8;j++) {
+            //We have designated "lake" spaces that are not passable. Make them lightblue. 
+            if (
+                (i===3 && j===1) || (i===4 && j===1) ||
+                (i==3 && j===2) || (i===4 && j===2)  ||
+                (i==3 && j===5) || (i===4 && j===5)  ||
+                (i==3 && j===6) || (i===4 && j===6) ) {
+                let nextSpace = new GameSpace(j,i, '#69fcff', false)
+                gameSpaceArray.push(nextSpace) 
+                } 
+            // create checkerboard appearance 
+            else if (
+                i%2===0 && j%2===0 || 
+                i%2>0 && j%2>0 ) {
+                    let nextSpace = new GameSpace(j,i, '#b4f7a1', true)
+                    gameSpaceArray.push(nextSpace)  
+                } 
+                else {
+                    let nextSpace = new GameSpace(j,i, 'lightgreen', true)
+                    gameSpaceArray.push(nextSpace)  
+                }
+            
+                    
+        }
+    }
+    redTeam = []
+    for (let i=0; i<24; i++) {
+        let newX = gameSpaceArray[i].x + 10
+        let newY = gameSpaceArray[i].y + 10
+        const soldier = new RedSoldier(newX,newY)
+        redTeam.push(soldier)
+    }
+    // randomize configuration of pieces 
+    redTeam.forEach(item => {
+        item.rank = shuffle(redSoldierRanks).pop()
+    })
+
+    blueTeam = []
+    // start i=63 and go to 39 to fill the bottom 4 rows of the gameboard
+    // (since gamespaceArray[39-63] is the bottom 4 rows of the gameboard)
+    for (let i=63; i>39; i--) {
+        let newX = gameSpaceArray[i].x + 10
+        let newY = gameSpaceArray[i].y + 10
+        const soldier = new BlueSoldier(newX,newY)
+        blueTeam.push(soldier)
+    }
+    blueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+    // render the initial board
+    newBoard()
+
+})
