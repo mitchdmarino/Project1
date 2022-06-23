@@ -8,7 +8,7 @@ const ctx = canvas.getContext('2d')
 canvas.setAttribute('height', getComputedStyle(canvas)['height'])
 canvas.setAttribute('width', getComputedStyle(canvas)['width'])
 
-/*-------------IMPORTANT FUNCTIONS AND BOOLEANS---------------*/
+/*-------------IMPORTANT FUNCTIONS AND BOOLEANS-------------------------------------------*/
 
 let gameStatus = true
 // https://masteringjs.io/tutorials/fundamentals/compare-arrays
@@ -28,10 +28,14 @@ const newBoard = function() {
     })
     //re render each team of soldiers(with the updated value from the move )
     redTeam.forEach(item => {
-        item.renderSoldier()
+        if (item.alive === true) {
+            item.renderSoldier()
+        }
     })
     blueTeam.forEach(item => {
-        item.renderSoldier()
+        if (item.alive===true) {
+            item.renderSoldier()
+        }
         // item.showRank()
     })
     
@@ -190,8 +194,45 @@ const movementHandler = function(item) {
     
     return movementFunction
 }
+const skirmish = function(attackingPiece, defendingPiece) {
+    // attacking piece will always be a soldier(since flag cannot move)
+    // defending piece might be flag. double check
+    attackingPiece.revealed = true
+    defendingPiece.revealed = true
+    const fightingSpacePosition = gameSpaceArray.findIndex((space) => {
+        return arrayEquals(space.position, defendingPiece.position)
+    })
+    const fightingSpace = gameSpaceArray[fightingSpacePosition]
+    if (defendingPiece.rank === 'f') {
+        gameStatus = false
+        console.log(`${attackingPiece.color} wins!`)
+    }
+    // if the defender has a weaker (higher number) rank, he loses and is removed. 
+    else if (defendingPiece.rank>attackingPiece.rank) {
+        console.log(`${attackingPiece.color} ${attackingPiece.rank} beats ${defendingPiece.color} ${defendingPiece.rank}`)
+        defendingPiece.alive = false
+        defendingPiece.position = null
+        fightingSpace.teamColor = attackingPiece.color
+    }
+    // if the defender is stronger, he wins and kicks the other player out 
+    else if (defendingPiece.rank<attackingPiece.rank) {
+        console.log(`${attackingPiece.color} ${attackingPiece.rank} loses to ${defendingPiece.color} ${defendingPiece.rank}`)
+        attackingPiece.alive = false
+        attackingPiece.position = null
+        fightingSpace.teamColor = defendingPiece.color
+    }
+    else if (defendingPiece.rank===attackingPiece.rank) {
+        console.log('Draw. Both soldiers are out')
+        attackingPiece.alive = false
+        defendingPiece.position = null
+        defendingPiece.alive = false
+        attackingPiece.position = null
+        fightingSpace.teamColor = ""
+    }
+    
+}
 
-/*---------------GAME FLOW ----------------------------------*/
+/*---------------GAME FLOW --------------------------------------------------------------------*/
 
 // set up the board
 // gamespace class 
@@ -255,7 +296,7 @@ for (let i=0;i<8;i++) {
 // create a class for all player pieces on each team
 
 // array to store all possible soldier ranks 
-const redSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'F']
+const redSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
 
 // Blue team (player 1)
 class BlueSoldier {
@@ -267,6 +308,7 @@ class BlueSoldier {
         // soldier status (alive or not)
         this.alive=true
         this.color = 'blue'
+        this.revealed = true
         // this helps us correlate position of soldier with position on grid 
         this.position = findPosition(this.x,this.y)
     }
@@ -307,7 +349,13 @@ class BlueSoldier {
             if (gameSpaceArray[potentialSpace].teamColor ==='red') {
                 // game checks if there is a battle
                 // if yes, battle and remove inferior piece
-
+                // identify the defender 
+                const defenderIndex = redTeam.findIndex((space) => {
+                    return arrayEquals(space.position, this.position)
+                })
+                const defender = redTeam[defenderIndex]
+                console.log(defender)
+                skirmish(this, defender)
                     // then check if the game is won
                         // end the game 
             }
@@ -333,7 +381,17 @@ class BlueSoldier {
             gameSpaceArray[currentSpace].currentSoldier = ''
             // now check if opponent is there
             if (gameSpaceArray[potentialSpace].teamColor ==='red') {
-                //battle
+                // game checks if there is a battle
+                // if yes, battle and remove inferior piece
+                // identify the defender 
+                const defenderIndex = redTeam.findIndex((space) => {
+                    return arrayEquals(space.position, this.position)
+                })
+                const defender = redTeam[defenderIndex]
+                console.log(defender)
+                skirmish(this, defender)
+                    // then check if the game is won
+                        // end the game 
             }
         }
         else {
@@ -358,7 +416,17 @@ class BlueSoldier {
             gameSpaceArray[currentSpace].currentSoldier = ''
             // now check if opponent is there
             if (gameSpaceArray[potentialSpace].teamColor ==='red') {
-                //battle
+                // game checks if there is a battle
+                // if yes, battle and remove inferior piece
+                // identify the defender 
+                const defenderIndex = redTeam.findIndex((space) => {
+                    return arrayEquals(space.position, this.position)
+                })
+                const defender = redTeam[defenderIndex]
+                console.log(defender)
+                skirmish(this, defender)
+                    // then check if the game is won
+                        // end the game 
             }
         }
         else {
@@ -382,7 +450,17 @@ class BlueSoldier {
             gameSpaceArray[currentSpace].currentSoldier = ''
             // now check if opponent is there
             if (gameSpaceArray[potentialSpace].teamColor ==='red') {
-                //battle
+                // game checks if there is a battle
+                // if yes, battle and remove inferior piece
+                // identify the defender 
+                const defenderIndex = redTeam.findIndex((space) => {
+                    return arrayEquals(space.position, this.position)
+                })
+                const defender = redTeam[defenderIndex]
+                console.log(defender)
+                skirmish(this, defender)
+                    // then check if the game is won
+                        // end the game 
             }
         }
         else {
@@ -402,23 +480,26 @@ class RedSoldier {
         this.alive=true
         this.color = 'red'
         this.position = findPosition(this.x,this.y)
+        this.revealed = false
     }
     //render function for the soldier
     renderSoldier() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x,this.y, canvas.width/12, canvas.height/12)
-        this.showRank()
         const currentSpace = gameSpaceArray.findIndex((space) => {
             return arrayEquals(space.position, this.position)           
         })
+        // red team rank only shows if revealed is true, which only happens after a skirmish
+        this.showRank()
         gameSpaceArray[currentSpace].teamColor = this.color
         gameSpaceArray[currentSpace].currentSoldier = this.rank
     }
     showRank() {
+    if (this.revealed) {
         ctx.fillStyle = 'black'
         ctx.textAlign = 'center'
         ctx.font = '30px Comic Sans MS'
-        ctx.fillText(this.rank, this.x+20, this.y+30)
+        ctx.fillText(this.rank, this.x+20, this.y+30)}
     }
     moveForward() {
         const currentSpace = gameSpaceArray.findIndex((space) => {
@@ -437,7 +518,16 @@ class RedSoldier {
                 gameSpaceArray[currentSpace].currentSoldier = ''
                 // now check if opponent is there
                 if (gameSpaceArray[potentialSpace].teamColor ==='blue') {
-                    //battle function 
+                    // game checks if there is a battle
+                    // if yes, battle and remove inferior piece
+                    // identify the defender 
+                    const defenderIndex = blueTeam.findIndex((space) => {
+                        return arrayEquals(space.position, this.position)
+                    })
+                    const defender = blueTeam[defenderIndex]
+                    skirmish(this, defender)
+                        // then check if the game is won
+                            // end the game 
                 }
             }
             else {
@@ -468,7 +558,16 @@ class RedSoldier {
                 gameSpaceArray[currentSpace].currentSoldier = ''
                 // now check if opponent is there
                 if (gameSpaceArray[potentialSpace].teamColor ==='blue') {
-                    //battle
+                    // game checks if there is a battle
+                    // if yes, battle and remove inferior piece
+                    // identify the defender 
+                    const defenderIndex = blueTeam.findIndex((space) => {
+                        return arrayEquals(space.position, this.position)
+                    })
+                    const defender = blueTeam[defenderIndex]
+                    skirmish(this, defender)
+                        // then check if the game is won
+                            // end the game 
                 }
             } else {
                 console.log('space is not open')
@@ -498,7 +597,16 @@ class RedSoldier {
                 gameSpaceArray[currentSpace].currentSoldier = ''
                 // now check if opponent is there
                 if (gameSpaceArray[potentialSpace].teamColor ==='blue') {
-                    //battle
+                    // game checks if there is a battle
+                    // if yes, battle and remove inferior piece
+                    // identify the defender 
+                    const defenderIndex = blueTeam.findIndex((space) => {
+                        return arrayEquals(space.position, this.position)
+                    })
+                    const defender = blueTeam[defenderIndex]
+                    skirmish(this, defender)
+                        // then check if the game is won
+                            // end the game 
                 }
             }
             else {
@@ -529,7 +637,16 @@ class RedSoldier {
                 gameSpaceArray[currentSpace].currentSoldier = ''
                 // now check if opponent is there
                 if (gameSpaceArray[potentialSpace].teamColor ==='blue') {
-                    //battle
+                    // game checks if there is a battle
+                    // if yes, battle and remove inferior piece
+                    // identify the defender 
+                    const defenderIndex = blueTeam.findIndex((space) => {
+                        return arrayEquals(space.position, this.position)
+                    })
+                    const defender = blueTeam[defenderIndex]
+                    skirmish(this, defender)
+                        // then check if the game is won
+                            // end the game 
                 }
             }
             else {
@@ -576,6 +693,16 @@ newBoard()
 // click on a soldier, then click on a rank to add the corresponding rank
 const blueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
 function playerConfiguration() {
+    // if random button is clicked, add random ranks (just for ease of testing)
+    document.querySelector('#randomize-setup').addEventListener('click', () => {
+        let randBlueSoldierRanks = []
+        randBlueSoldierRanks = shuffle(blueSoldierRanks)
+        blueTeam.forEach(item => {
+            item.rank = randBlueSoldierRanks.pop()
+            random = true
+            newBoard()
+        })
+    }, {once: true})
     canvas.addEventListener('click', e => {
         const clickPosition = findPosition(e.offsetX,e.offsetY)
         let clickedSoldier = ""
@@ -618,7 +745,7 @@ function playerConfiguration() {
         }
     },{once: true})
 }
-playerConfiguration()
+
 
 
 function playerTurn() {
@@ -637,9 +764,14 @@ function playerTurn() {
             }
         })
         console.log(clickedSoldier)
-        // if there is a clicked soldier, add event listener
-        if (clickedSoldier!=="") {
+        // if there is a clicked soldier that isn't the flag, add event listener
+       if (clickedSoldier!=="" && clickedSoldier.rank!=='f') {
             document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
+        }
+        // if clicked on flag, no move can occur. 
+        else if (clickedSoldier.rank ==='f') {
+            console.log('cannot move the flag')
+            playerTurn()
         }
         // if there isn't a clicked soldier, we need to run the function again
         else {
@@ -664,8 +796,11 @@ function cpuTurn() {
     while (cpuTurn === true) {
         const randomSoldier = redTeam[Math.floor(Math.random()*redTeam.length)];
         // the flag cannot move 
-        if (randomSoldier.rank === 'F') {
+        if (randomSoldier.rank === 'f') {
             // restart the while loop 
+            continue
+        }
+        if (randomSoldier.alive === false) {
             continue
         }
         const randomDirection = Math.floor(Math.random()*4)
@@ -678,13 +813,14 @@ function cpuTurn() {
             }
         }
         if (randomDirection ===1) {
-            if (randomSoldier.moveBack()===false) {
-                cpuTurn = true
-            } else {
-                cpuTurn = false
-                console.log('we move',randomSoldier,randomDirection)
+            continue
+            // if (randomSoldier.moveBack()===false) {
+            //     cpuTurn = true
+            // } else {
+            //     cpuTurn = false
+            //     console.log('we move',randomSoldier,randomDirection)
 
-            }
+            // }
         }
         if (randomDirection ===2) {
             
@@ -725,3 +861,4 @@ function cpuTurn() {
 
         // move on to player turn 
 
+playerConfiguration()
