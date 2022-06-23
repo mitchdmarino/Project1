@@ -80,55 +80,67 @@ function findPosition(x,y) {
 let column = 0
 let row = 0
 switch(true) {
-    case (x<(1*canvas.width/8)): 
+    case (x<(1*canvas.width/10)): 
         column = 0
         break
-    case (x<(2*canvas.width/8)): 
+    case (x<(2*canvas.width/10)): 
         column = 1
         break
-    case (x<(3*canvas.width/8)): 
+    case (x<(3*canvas.width/10)): 
         column = 2
         break
-    case (x<(4*canvas.width/8)): 
+    case (x<(4*canvas.width/10)): 
         column = 3
         break
-    case (x<(5*canvas.width/8)): 
+    case (x<(5*canvas.width/10)): 
         column = 4
         break
-    case (x<(6*canvas.width/8)): 
+    case (x<(6*canvas.width/10)): 
         column = 5
         break
-    case (x<(7*canvas.width/8)): 
+    case (x<(7*canvas.width/10)): 
         column = 6
         break
-    case (x<(canvas.width)): 
+    case (x<(8*canvas.width/10)): 
         column = 7
+        break
+    case (x<(9*canvas.width/10)): 
+        column = 8
+        break
+    case (x<(10*canvas.width/10)): 
+        column = 9
         break
 }
 switch(true) {
-    case (y<(1*canvas.height/8)): 
+    case (y<(1*canvas.height/10)): 
         row = 0
         break
-    case (y<(2*canvas.height/8)): 
+    case (y<(2*canvas.height/10)): 
         row = 1
         break
-    case (y<(3*canvas.height/8)): 
+    case (y<(3*canvas.height/10)): 
         row = 2
         break
-    case (y<(4*canvas.height/8)): 
+    case (y<(4*canvas.height/10)): 
         row = 3
         break
-    case (y<(5*canvas.height/8)): 
+    case (y<(5*canvas.height/10)): 
         row = 4
         break
-    case (y<(6*canvas.height/8)): 
+    case (y<(6*canvas.height/10)): 
         row = 5
         break
-    case (y<(7*canvas.height/8)): 
+    case (y<(7*canvas.height/10)): 
         row = 6
         break
-    case (y<(8*canvas.height/8)): 
+    case (y<(8*canvas.height/10)): 
         row = 7
+        break
+    case (y<(9*canvas.height/10)): 
+        row = 8
+        break
+    case (y<(10*canvas.height/10)): 
+        row = 9
         break
 }
 return [column, row]
@@ -224,6 +236,53 @@ const skirmish = function(attackingPiece, defendingPiece) {
         console.log(`The flag has been captured! ${attackingPiece.color} wins!`)
         output.innerHTML=`The flag has been captured! ${attackingPiece.color} wins!`
     }
+    if (defendingPiece.rank === 'b') {
+        console.log('kaboom?')
+        if (attackingPiece.rank===8) {
+            defendingPiece.alive= false
+            defendingPiece.position = null
+            fightingSpace.teamColor = attackingPiece.color
+            output.innerHTML = 'Miner diffused a bomb.'
+        }
+        else {
+            attackingPiece.alive=false
+            attackingPiece.position = null
+            fightingSpace.teamColor = defendingPiece.color
+            output.innerHTML = `Kabooom. ${attackingPiece.color} ${attackingPiece.rank} found a bomb.`
+        }
+    }
+    if (defendingPiece.rank==='s') {
+        if (attackingPiece.rank==='s') {
+            attackingPiece.alive = false
+            defendingPiece.position = null
+            defendingPiece.alive = false
+            attackingPiece.position = null
+            fightingSpace.teamColor = ""
+            output.innerHTML = `${attackingPiece.color} ${attackingPiece.rank} and ${defendingPiece.color} ${defendingPiece.rank} took each other out!`
+        }
+        else {
+            defendingPiece.alive = false
+            defendingPiece.position = null
+            fightingSpace.teamColor = attackingPiece.color
+            output.innerHTML = `${attackingPiece.color} ${attackingPiece.rank} takes out the ${defendingPiece.color} spy!`
+
+        }
+    }
+    if (attackingPiece.rank === 's') {
+        if (defendingPiece.rank===1) {
+            console.log('assassination')
+            defendingPiece.position = null
+            defendingPiece.alive = false
+            fightingSpace.teamColor = attackingPiece.color
+            output.innerHTML = `${attackingPiece.color} assassinates the ${defendingPiece.color} Marshall 😳`
+        }
+        else {
+            attackingPiece.alive=false 
+            attackingPiece.position=null
+            fightingSpace.teamColor = defendingPiece.color
+            output.innerHTML = `${attackingPiece.color} Spy has been stopped by ${defendingPiece.color}`
+        }
+    }
     // if the defender has a weaker (higher number) rank, he loses and is removed. 
     else if (defendingPiece.rank>attackingPiece.rank) {
         console.log(`${attackingPiece.color} ${attackingPiece.rank} beats ${defendingPiece.color} ${defendingPiece.rank}`)
@@ -260,10 +319,10 @@ class GameSpace {
     constructor(column, row, color, isOpen) {
         // the x position is the width of the entire board(canvas.width) times the column number
         // and divided by 8. 
-        this.x = canvas.width*column/8
-        this.y = canvas.height*row/8
-        this.width = canvas.width/8
-        this.height = canvas.height/8
+        this.x = canvas.width*column/10
+        this.y = canvas.height*row/10
+        this.width = canvas.width/10
+        this.height = canvas.height/10
         // position on the grid: 
         this.position = findPosition(this.x, this.y) 
         this.color = color 
@@ -285,14 +344,14 @@ class GameSpace {
 // make an array of the entire gameboard using for loop
 // added to array for easy access/manipulation
 let gameSpaceArray = []
-for (let i=0;i<8;i++) {
-    for (let j=0;j<8;j++) {
+for (let i=0;i<10;i++) {
+    for (let j=0;j<10;j++) {
         //We have designated "lake" spaces that are not passable. Make them lightblue. 
         if (
-            (i===3 && j===1) || (i===4 && j===1) ||
-            (i==3 && j===2) || (i===4 && j===2)  ||
-            (i==3 && j===5) || (i===4 && j===5)  ||
-            (i==3 && j===6) || (i===4 && j===6) ) {
+            (i===4 && j===2) || (i===5 && j===2) ||
+            (i==4 && j===3) || (i===5 && j===3)  ||
+            (i==4 && j===6) || (i===5 && j===6)  ||
+            (i==4 && j===7) || (i===5 && j===7) ) {
             let nextSpace = new GameSpace(j,i, '#69fcff', false)
             gameSpaceArray.push(nextSpace) 
             } 
@@ -316,13 +375,13 @@ for (let i=0;i<8;i++) {
 // create a class for all player pieces on each team
 
 // array to store all possible soldier ranks 
-let redSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+let redSoldierRanks = [1,2,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,8,9,9,9,9,9,9,9,9,'s','b','b','b','b','b','b','f']
 
 // Blue team (player 1)
 class BlueSoldier {
     static total = 24
     constructor(x, y) {
-        this.rank = '#'
+        this.rank = ''
         this.x = x 
         this.y = y
         // soldier status (alive or not)
@@ -335,7 +394,7 @@ class BlueSoldier {
     //render function for the soldier
     renderSoldier() {
         ctx.fillStyle = this.color
-        ctx.fillRect(this.x,this.y, canvas.width/12, canvas.height/12)
+        ctx.fillRect(this.x,this.y, canvas.width/15, canvas.height/15)
         // blue team rank will always show
         this.showRank()
         const currentSpace = gameSpaceArray.findIndex((space) => {
@@ -350,6 +409,9 @@ class BlueSoldier {
         ctx.font = '20px Comic Sans MS'
         if (this.rank==='f') {
             ctx.fillText('⛳️', this.x+(canvas.width/45) , this.y+(canvas.width/17))
+        }
+        else if (this.rank==='b') {
+            ctx.fillText('💣', this.x+(canvas.width/45) , this.y+(canvas.width/17))
         }
         else {
             ctx.fillText(this.rank, this.x+(canvas.width/45) , this.y+(canvas.width/17))
@@ -371,7 +433,7 @@ class BlueSoldier {
                 return arrayEquals(space.position, [this.position[0], this.position[1]-1])
             })
             if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
-                this.y -= canvas.height/8
+                this.y -= canvas.height/10
                 this.position[1] -=1
                 //Since we have moved, remove soldier attributes from previous space
                 gameSpaceArray[currentSpace].teamColor = ''
@@ -413,7 +475,7 @@ class BlueSoldier {
                 return arrayEquals(space.position, [this.position[0]-1, this.position[1]])
             })
             if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
-                this.x -= canvas.width/8
+                this.x -= canvas.width/10
                 this.position[0] -=1
                 //Since we have moved, remove soldier attributes from previous space
                 gameSpaceArray[currentSpace].teamColor = ''
@@ -445,7 +507,7 @@ class BlueSoldier {
             const currentSpace = gameSpaceArray.findIndex((space) => {
                 return arrayEquals(space.position, this.position)           
             })
-            if (this.position[0]===7) {
+            if (this.position[0]===9) {
                 output.innerHTML = 'Cannot move there.'
                 return false
             }
@@ -454,7 +516,7 @@ class BlueSoldier {
                 return arrayEquals(space.position, [this.position[0]+1, this.position[1]])
             })
             if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
-                this.x += canvas.width/8
+                this.x += canvas.width/10
                 this.position[0] +=1
                 //Since we have moved, remove soldier attributes from previous space
                 gameSpaceArray[currentSpace].teamColor = ''
@@ -487,7 +549,7 @@ class BlueSoldier {
             return arrayEquals(space.position, this.position)
         })
         // if we are in the bottom row, we cannot move backwards
-        if (this.position[1]===7) {
+        if (this.position[1]===9) {
             output.innerHTML = 'Cannot move there.'
             return false
         }
@@ -496,7 +558,7 @@ class BlueSoldier {
                 return arrayEquals(space.position, [this.position[0], this.position[1]+1])
             })
             if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'blue') {
-                this.y += canvas.height/8
+                this.y += canvas.height/10
                 this.position[1] +=1
                 //Since we have moved, remove soldier attributes from previous space
                 gameSpaceArray[currentSpace].teamColor = ''
@@ -528,7 +590,7 @@ class BlueSoldier {
 
 // Red Team (CPU)
 class RedSoldier {
-    static total = 24
+    static total = 40
     constructor(x, y) {
         this.rank = '#'
         this.x = x 
@@ -541,7 +603,7 @@ class RedSoldier {
     //render function for the soldier
     renderSoldier() {
         ctx.fillStyle = this.color
-        ctx.fillRect(this.x,this.y, canvas.width/12, canvas.height/12)
+        ctx.fillRect(this.x,this.y, canvas.width/15, canvas.height/15)
         const currentSpace = gameSpaceArray.findIndex((space) => {
             return arrayEquals(space.position, this.position)           
         })
@@ -553,8 +615,16 @@ class RedSoldier {
     showRank() {
         if (this.revealed) {
             ctx.fillStyle = 'white'
-        ctx.font = '20px Comic Sans MS'
-        ctx.fillText(this.rank, this.x+(canvas.width/45) , this.y+(canvas.width/17))
+            ctx.font = '20px Comic Sans MS'
+            if (this.rank==='f') {
+                ctx.fillText('⛳️', this.x+(canvas.width/45) , this.y+(canvas.width/17))
+            }
+            else if (this.rank==='b') {
+                ctx.fillText('💣', this.x+(canvas.width/45) , this.y+(canvas.width/17))
+            }
+            else {
+                ctx.fillText(this.rank, this.x+(canvas.width/45) , this.y+(canvas.width/17))
+            }     
         }
     }
     moveForward() {
@@ -567,7 +637,7 @@ class RedSoldier {
         })
         if (potentialSpace!==-1) {
             if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'red') {
-                this.y += canvas.height/8
+                this.y += canvas.height/10
                 this.position[1] +=1
                 //Since we have moved, remove soldier attributes from previous space
                 gameSpaceArray[currentSpace].teamColor = ''
@@ -608,7 +678,7 @@ class RedSoldier {
         })
         if (potentialSpace!== -1) {
             if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'red') {
-                this.x += canvas.width/8
+                this.x += canvas.width/10
                 this.position[0] +=1
                 //Since we have moved, remove soldier attributes from previous space
                 gameSpaceArray[currentSpace].teamColor = ''
@@ -648,7 +718,7 @@ class RedSoldier {
         })
         if (potentialSpace!== -1) {
             if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'red') {
-                this.x -= canvas.width/8
+                this.x -= canvas.width/10
                 this.position[0] -=1
                 //Since we have moved, remove soldier attributes from previous space
                 gameSpaceArray[currentSpace].teamColor = ''
@@ -688,7 +758,7 @@ class RedSoldier {
         })
         if (potentialSpace!==-1) {
             if ((gameSpaceArray[potentialSpace].openSpace) && (gameSpaceArray[potentialSpace].teamColor !== 'red')) {
-                this.y -= canvas.height/8
+                this.y -= canvas.height/10
                 this.position[1] -=1
                 //Since we have moved, remove soldier attributes from previous space
                 gameSpaceArray[currentSpace].teamColor = ''
@@ -720,9 +790,9 @@ class RedSoldier {
     }
 }
 let redTeam = []
-for (let i=0; i<24; i++) {
-    let newX = gameSpaceArray[i].x + canvas.width/48
-    let newY = gameSpaceArray[i].y + canvas.height/48
+for (let i=0; i<40; i++) {
+    let newX = gameSpaceArray[i].x + canvas.width/60
+    let newY = gameSpaceArray[i].y + canvas.height/60
     const soldier = new RedSoldier(newX,newY)
     redTeam.push(soldier)
 }
@@ -734,9 +804,9 @@ redTeam.forEach(item => {
 let blueTeam = []
 // start i=63 and go to 39 to fill the bottom 4 rows of the gameboard
 // (since gamespaceArray[39-63] is the bottom 4 rows of the gameboard)
-for (let i=63; i>39; i--) {
-    let newX = gameSpaceArray[i].x + canvas.width/48
-    let newY = gameSpaceArray[i].y + canvas.height/48
+for (let i=99; i>59; i--) {
+    let newX = gameSpaceArray[i].x + canvas.width/60
+    let newY = gameSpaceArray[i].y + canvas.height/60
     const soldier = new BlueSoldier(newX,newY)
     blueTeam.push(soldier)
    
@@ -750,7 +820,7 @@ newBoard()
  // if random button is clicked, add random ranks (just for ease of testing)
  document.querySelector('#randomize-setup').addEventListener('click', () => {
     if (gameStarted===false) {    
-        let randBlueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+        let randBlueSoldierRanks = [1,2,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,8,9,9,9,9,9,9,9,9,'s','b','b','b','b','b','b','f']
         blueTeam.forEach(item => {
             item.rank = shuffle(randBlueSoldierRanks).pop()
             newBoard()
@@ -763,7 +833,7 @@ newBoard()
 })
 // if choose setup is picked, run the following function that will allow to 
 // click on a soldier, then enter a valid rank
-let blueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+let blueSoldierRanks = [1,2,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,8,9,9,9,9,9,9,9,9,'s','b','b','b','b','b','b','f']
 function playerConfiguration() {
    if (gameStarted ===false) { 
         output.innerHTML=`Click on a blue soldier and type in one of the following ranks: ${blueSoldierRanks}`    
@@ -784,7 +854,7 @@ function playerConfiguration() {
                 document.addEventListener('keydown', e=> {
                     console.log(clickedSoldier)
                     blueSoldierRanks.forEach((item, index) => {
-                        if (clickedSoldier.rank==='#') {    
+                        if (clickedSoldier.rank==='') {    
                             if (item == e.key) {
                                 clickedSoldier.rank = item
                                 blueSoldierRanks.splice(index,1)
@@ -852,14 +922,25 @@ function findSoldier(e) {
         }
     })
     console.log(clickedSoldier)
+    
     // if there is a clicked soldier that isn't the flag, add event listener
-if (clickedSoldier!=="" && clickedSoldier.rank!=='f') {
+if (clickedSoldier!=="" && clickedSoldier.rank!=='f' && clickedSoldier.rank!=='b') {
+        // if (clickedSoldier.rank===9) {
+        //     output.innerHTML='You have selected a scout. Press WASD for normal movement or arrow keys for extended movement.'
+        //     document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
+        // }
+
+        output.innerHTML=`You have selected ${clickedSoldier.rank}. Press WASD or arrow keys for movement.`
         document.addEventListener('keydown',movementHandler(clickedSoldier), {once: true})
     }
     // if clicked on flag, no move can occur. 
     else if (clickedSoldier.rank ==='f') {
         console.log('cannot move the flag')
         output.innerHTML='The flag cannot be moved'
+        playerTurn()
+    }
+    else if (clickedSoldier.rank === 'b') {
+        output.innerHTML = 'Bombs cannot be moved'
         playerTurn()
     }
     // if there isn't a clicked soldier, we need to run the function again
@@ -889,8 +970,8 @@ function cpuTurn() {
 
     while (cpuTurn === true) {
         const randomSoldier = redTeam[Math.floor(Math.random()*redTeam.length)];
-        // the flag cannot move 
-        if (randomSoldier.rank === 'f') {
+        // the flag and bombs cannot move 
+        if (randomSoldier.rank === 'f' || randomSoldier.rank === 'b') {
             // restart the while loop 
             continue
         }
@@ -963,14 +1044,14 @@ document.querySelector('#reset').addEventListener('click', () => {
     gameStarted = false
     // reset every array and rerender the items in them
     gameSpaceArray = []
-    for (let i=0;i<8;i++) {
-        for (let j=0;j<8;j++) {
+    for (let i=0;i<10;i++) {
+        for (let j=0;j<10;j++) {
             //We have designated "lake" spaces that are not passable. Make them lightblue. 
             if (
-                (i===3 && j===1) || (i===4 && j===1) ||
-                (i==3 && j===2) || (i===4 && j===2)  ||
-                (i==3 && j===5) || (i===4 && j===5)  ||
-                (i==3 && j===6) || (i===4 && j===6) ) {
+                (i===4 && j===2) || (i===5 && j===2) ||
+                (i==4 && j===3) || (i===5 && j===3)  ||
+                (i==4 && j===6) || (i===5 && j===6)  ||
+                (i==4 && j===7) || (i===5 && j===7) ) {
                 let nextSpace = new GameSpace(j,i, '#69fcff', false)
                 gameSpaceArray.push(nextSpace) 
                 } 
@@ -990,14 +1071,14 @@ document.querySelector('#reset').addEventListener('click', () => {
         }
     }
     redTeam = []
-    for (let i=0; i<24; i++) {
-        let newX = gameSpaceArray[i].x + canvas.width/48
-        let newY = gameSpaceArray[i].y + canvas.height/48
+    for (let i=0; i<40; i++) {
+        let newX = gameSpaceArray[i].x + canvas.width/60
+        let newY = gameSpaceArray[i].y + canvas.height/60
         const soldier = new RedSoldier(newX,newY)
         redTeam.push(soldier)
     }
     // randomize configuration of pieces 
-    redSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+    redSoldierRanks = [1,2,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,8,9,9,9,9,9,9,9,9,'s','b','b','b','b','b','b','f']
     redTeam.forEach(item => {
         item.rank = shuffle(redSoldierRanks).pop()
     })
@@ -1005,13 +1086,14 @@ document.querySelector('#reset').addEventListener('click', () => {
     blueTeam = []
     // start i=63 and go to 39 to fill the bottom 4 rows of the gameboard
     // (since gamespaceArray[39-63] is the bottom 4 rows of the gameboard)
-    for (let i=63; i>39; i--) {
-        let newX = gameSpaceArray[i].x + 10
-        let newY = gameSpaceArray[i].y + 10
+    for (let i=99; i>59; i--) {
+        let newX = gameSpaceArray[i].x + canvas.width/60
+        let newY = gameSpaceArray[i].y + canvas.height/60
         const soldier = new BlueSoldier(newX,newY)
         blueTeam.push(soldier)
+       
     }
-    blueSoldierRanks = [1,2,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,'f']
+    blueSoldierRanks = [1,2,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,8,9,9,9,9,9,9,9,9,'s','b','b','b','b','b','b','f']
     
     // render the initial board
     newBoard()
