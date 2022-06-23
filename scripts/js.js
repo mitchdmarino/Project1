@@ -69,7 +69,7 @@ class GameSpace {
 }
 
 // make one square with this class 
-// const square1 = new GameSpace(0,0)
+// const square1 = new GameSpace(0,0
 // square1.renderSpace()
 
 // make the entire gameboard using the for loop from line 36
@@ -80,21 +80,21 @@ for (let i=0;i<8;i++) {
     for (let j=0;j<8;j++) {
         //We have designated "lake" spaces that are not passable. Make them blue. 
         if (
-            (i===1 && j===3) || (i===1 && j===4) ||
-            (i==2 && j===3) || (i===2 && j===4)  ||
-            (i==5 && j===3) || (i===5 && j===4)  ||
-            (i==6 && j===3) || (i===6 && j===4) ) {
-            let nextSpace = new GameSpace(i,j, '#69fcff', false)
+            (i===3 && j===1) || (i===4 && j===1) ||
+            (i==3 && j===2) || (i===4 && j===2)  ||
+            (i==3 && j===5) || (i===4 && j===5)  ||
+            (i==3 && j===6) || (i===4 && j===6) ) {
+            let nextSpace = new GameSpace(j,i, '#69fcff', false)
             gameSpaceArray.push(nextSpace) 
             } 
         else if (
             i%2===0 && j%2===0 || 
             i%2>0 && j%2>0 ) {
-                let nextSpace = new GameSpace(i,j, '#b4f7a1', true)
+                let nextSpace = new GameSpace(j,i, '#b4f7a1', true)
                 gameSpaceArray.push(nextSpace)  
             } 
             else {
-                let nextSpace = new GameSpace(i,j, 'lightgreen', true)
+                let nextSpace = new GameSpace(j,i, 'lightgreen', true)
                 gameSpaceArray.push(nextSpace)  
             }
         
@@ -106,6 +106,107 @@ for (let i=0;i<8;i++) {
 gameSpaceArray.forEach(item => {
     item.renderSpace() 
 })
+
+
+// create a class for all player pieces
+
+class BlueSoldier {
+    static total = 24
+    constructor(rank, x, y) {
+        this.rank = rank
+        this.x = x 
+        this.y = y
+        this.alive=true
+        this.color = 'blue'
+    }
+    //render function for the soldier
+    renderSoldier() {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.x,this.y, canvas.width/12, canvas.height/12)
+    }
+    showRank() {
+        ctx.fillStyle = 'black'
+        ctx.textAlign = 'center'
+        ctx.font = '30px Comic Sans MS'
+        ctx.fillText(rank, this.x+10, this.y+10)
+    }
+    moveFoward() {
+
+    }
+    moveLeft() {
+
+    }
+    moveRight() {
+
+    }
+    moveBack() {
+
+    }
+}
+class RedSoldier {
+    static total = 24
+    constructor(rank, x, y) {
+        this.rank = rank
+        this.x = x 
+        this.y = y
+        this.alive=true
+        this.color = 'red'
+    }
+    //render function for the soldier
+    renderSoldier() {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.x,this.y, canvas.width/12, canvas.height/12)
+    }
+    showRank() {
+        ctx.fillStyle = 'black'
+        ctx.textAlign = 'center'
+        ctx.font = '30px Comic Sans MS'
+        ctx.fillText(rank, this.x+10, this.y+10)
+    }
+    moveFoward() {
+
+    }
+    moveLeft() {
+
+    }
+    moveRight() {
+
+    }
+    moveBack() {
+
+    }
+}
+
+
+// can access each game space to put token in corresponding position 
+// board layout 00 01 02 03 04 05 06 07 
+//              08 09 10 11 12 13 14 15
+//              16 17 18 19 20 21 22 23 ....
+
+
+const redTeam = []
+for (let i=0; i<24; i++) {
+    let newX = gameSpaceArray[i].x + 10
+    let newY = gameSpaceArray[i].y + 10
+    const soldier = new RedSoldier(1,newX,newY)
+    redTeam.push(soldier)
+}
+redTeam.forEach(item => {
+    item.renderSoldier()
+})
+
+const blueTeam = []
+for (let i=63; i>39; i--) {
+    let newX = gameSpaceArray[i].x + 10
+    let newY = gameSpaceArray[i].y + 10
+    const soldier = new BlueSoldier(1,newX,newY)
+    blueTeam.push(soldier)
+    console.log(i)
+}
+blueTeam.forEach(item => {
+    item.renderSoldier()
+})
+
 
 
 
