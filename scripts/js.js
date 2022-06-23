@@ -361,7 +361,7 @@ class BlueSoldier {
             return arrayEquals(space.position, this.position)           
         })
         // if at the top of the board, cannot move forward
-        if (this.position[1]===7) {
+        if (this.position[1]===0) {
             output.innerHTML = 'Cannot move there.'
             return false
             
@@ -390,6 +390,7 @@ class BlueSoldier {
                         // then check if the game is won
                             // end the game 
                 }
+                else {output.innerHTML = 'CPU Turn'}
             }
             else {
                 console.log('space is not open')
@@ -431,6 +432,7 @@ class BlueSoldier {
                         // then check if the game is won
                             // end the game 
                 }
+                else {output.innerHTML = 'CPU Turn'}
             }
             else {
                 console.log('space is not open')
@@ -471,6 +473,7 @@ class BlueSoldier {
                         // then check if the game is won
                             // end the game 
                 }
+                else {output.innerHTML = 'CPU Turn'}
             }
             else {
                 console.log('space is not open')
@@ -484,7 +487,7 @@ class BlueSoldier {
             return arrayEquals(space.position, this.position)
         })
         // if we are in the bottom row, we cannot move backwards
-        if (this.position[1]===0) {
+        if (this.position[1]===7) {
             output.innerHTML = 'Cannot move there.'
             return false
         }
@@ -512,6 +515,7 @@ class BlueSoldier {
                         // then check if the game is won
                             // end the game 
                 }
+                else {output.innerHTML = 'CPU Turn'}
             }
             else {
                 console.log('space is not open')
@@ -581,6 +585,7 @@ class RedSoldier {
                         // then check if the game is won
                             // end the game 
                 }
+                else {output.innerHTML = 'Your Turn'}
             }
             else {
     
@@ -621,6 +626,7 @@ class RedSoldier {
                         // then check if the game is won
                             // end the game 
                 }
+                else {output.innerHTML = 'Your Turn'}
             } else {
     
                 return false
@@ -659,7 +665,7 @@ class RedSoldier {
                     skirmish(this, defender)
                         // then check if the game is won
                             // end the game 
-                }
+                } else {output.innerHTML = 'Your Turn'}
             }
             else {
     
@@ -681,7 +687,7 @@ class RedSoldier {
             return arrayEquals(space.position, [this.position[0], this.position[1]-1])
         })
         if (potentialSpace!==-1) {
-            if ((gameSpaceArray[potentialSpace].openSpace) && gameSpaceArray[potentialSpace].teamColor !== 'red') {
+            if ((gameSpaceArray[potentialSpace].openSpace) && (gameSpaceArray[potentialSpace].teamColor !== 'red')) {
                 this.y -= canvas.height/8
                 this.position[1] -=1
                 //Since we have moved, remove soldier attributes from previous space
@@ -699,7 +705,7 @@ class RedSoldier {
                     skirmish(this, defender)
                         // then check if the game is won
                             // end the game 
-                }
+                } else {output.innerHTML = 'Your Turn'}
             }
             else {
     
@@ -948,7 +954,7 @@ function cpuTurn() {
 
 document.querySelector('#reset').addEventListener('click', () => {
     console.log('reset')
-    output.innerHTML = 'Set up the board, then press start.'
+    output.innerHTML = 'Set up the board by clicking Choose Setup or Random Setup.'
     // remove event listener from canvas 
     canvas.removeEventListener('click', findSoldier )
     // set booleans to default 
