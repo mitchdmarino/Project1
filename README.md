@@ -3,7 +3,7 @@
 
 The gameboard is the battlefield. Hurry up! The battle is starting soon. During the calm before the storm, set up your pieces strategically to maximize offensive and defensive output. Once battle commences, charge your pieces forward to get to your opponent's flag. Careful! Don't get too aggresive or you might get outflanked, and watch out for bombs and that pesky spy! Use your scouts to 'scout' the battlefield. Utilize your stronger soldiers to their fullest potential. In a game of sacrifice, constant risk-vs-reward assesments, and ultimate strategy and bluffing, inspire your troops for greatness. Bring your army to victory by sheer force of will. 
 
-## Gameplay
+## Background of Stratego Rules
 The gameboard consists of 100 spaces. At the start of the match, each player sets up their board with their army of 40. 
 
 The army consists of:
@@ -16,7 +16,7 @@ The army consists of:
 * 4 Lieutenants (rank 6)
 * 4 Sergeants (rank 7)
 * 5 Miners (rank 8)
-* 9 Scouts (rank 9)
+* 8 Scouts (rank 9)
 * 1 Spy (rank S)
 * 6 Bombs (rank B)
 * 1 Flag (rank F)
@@ -55,7 +55,15 @@ The minimum viable product will be 'Stratego-Lite.' At minimum, the project shou
 * Canvas game screen that displays the gameboard, and updates token positions and status.
 * A gameboard of 8 x 8 squares
 * Each player gets 24 soldiers, they can place them however they like within the first three rows of their side. 
-* DO NOT INCLUDE SPECIAL SOLDIERS. Only include soldiers rank 1-5. There will be no bombs, no spies, no miners, no scouts. Soldiers only win a battle by being a stronger rank. 
+* DO NOT INCLUDE SPECIAL SOLDIERS. Only include soldiers rank 1-6. There will be no bombs, no spies, no miners, no scouts. Soldiers only win a battle by being a stronger rank. 
+    - Soldiers: 
+        * Marshal   Rank 1    (total: 1)
+        * General   Rank 2    (total: 1)
+        * Colonel   Rank 3    (total: 3)
+        * Major     Rank 4    (total: 4)
+        * Captain   Rank 6    (total: 5)
+        * Lieutenant Rank 7   (total: 6)
+    - May have to tinker with totals to fine tune gameplay
 * Token ranks will be displayed by a number in a square or circle
 * Ability for player to arrange soldiers in any configuration, so long as all 40 pieces are contained within the first four rows of their side. 
 * Ability for player to confirm their initial configuration. 
