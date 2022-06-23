@@ -49,7 +49,7 @@ HTML, CSS, JavaScript, HTML 5 Canvas
 
 # Minimum Viable Product
 
-The minimum viable product will be 'Stratego-Lite.' At minimum, the project should have the following: 
+The minimum viable product will be 'Stratego-Lite.' It is not as complex as the original game. At minimum, the project should have the following: 
 
 * A start Screen with game-play instructions and start button. 
 * Canvas game screen that displays the gameboard, and updates token positions and status.
@@ -64,11 +64,10 @@ The minimum viable product will be 'Stratego-Lite.' At minimum, the project shou
         * Captain   Rank 6    (total: 5)
         * Lieutenant Rank 7   (total: 6)
     - May have to tinker with totals to fine tune gameplay
-* Token ranks will be displayed by a number in a square or circle
-* Ability for player to arrange soldiers in any configuration, so long as all 40 pieces are contained within the first four rows of their side. 
+* Tokens will be displayed by a number in a square or circle. Player will be able to move these tokens where they want. 
 * Ability for player to confirm their initial configuration. 
 * A computer opponent that will set up its pieces randomly (constraining to the same rules as above)
-    - The computer will also move one their pieces randomly each turn. 
+    - The computer will move one their pieces randomly each turn. 
     - Computer's soldier's ranks must not be visible until they engage in a battle. 
     - Computer must place flag in the back row 
 * Each player's movement must be restricted to one space per turn. The space may be horizontally or vertically adjacent. If it is occupied by a friendly soldier or the lake chokepoint, the space must be blocked. If it is occcupied by an enemy soldier, the two soldiers will battle. 
@@ -98,8 +97,8 @@ The minimum viable product will be 'Stratego-Lite.' At minimum, the project shou
 
 # Roadblocks
 
-* Canvas. I may be complicating things by introducing canvas into it, but I wanted to see what I could do with it. Being a grid setup, it might be easier just use DOM manipulation, but I think with canvas I can introduce some smooth animations and keep track of each token using OOP. 
-
+* Canvas. I may be complicating things by introducing canvas into it, but I wanted to see what I could do with it. Being a grid setup, it might be easier just use DOM manipulation, but I think with canvas I can introduce some smooth animations and keep track of each token easily  
+* This game has a lot of specific rules so it may be a bit complex to get everything working together. 
 
 
 
