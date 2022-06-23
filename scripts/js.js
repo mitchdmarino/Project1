@@ -8,6 +8,8 @@ const ctx = canvas.getContext('2d')
 canvas.setAttribute('height', getComputedStyle(canvas)['height'])
 canvas.setAttribute('width', getComputedStyle(canvas)['width'])
 
+console.log(canvas.width)
+
 //  create the game board. each square will be 1/8th the width 
 //  and height of the entire board. 
 //  Make the board cover the entire canvas
@@ -49,15 +51,17 @@ canvas.setAttribute('width', getComputedStyle(canvas)['width'])
 // use this function to create a GameSpace class that will construct GameSpace objects. 
 
 class GameSpace {
-    constructor(row, column) {
+    constructor(row, column, color, isOpen) {
         this.x = canvas.width*row/8
         this.y = canvas.height*column/8
         this.width = canvas.width/8
         this.height = canvas.height/8
-        this.openSpace = true
+        this.openSpace = isOpen
+        this.color = color
         // if openSpace = false, player won't be able to move there
     }
     renderSpace() {
+        ctx.fillStyle = this.color
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
 }
@@ -71,17 +75,34 @@ const gameSpaceArray = []
 for (let i=0;i<8;i++) {
     for (let j=0;j<8;j++) {
         if (
+            (i===1 && j===3) || (i===1 && j===4) ||
+            (i==2 && j===3) || (i===2 && j===4)  ||
+            (i==5 && j===3) || (i===5 && j===4)  ||
+            (i==6 && j===3) || (i===6 && j===4) ) {
+            let nextSpace = new GameSpace(i,j, 'blue', false)
+            gameSpaceArray.push(nextSpace) 
+            } 
+        else if (
             i%2===0 && j%2===0 || 
             i%2>0 && j%2>0 ) {
-                ctx.fillStyle = 'green'
-            }
+                let nextSpace = new GameSpace(i,j, 'green', true)
+                gameSpaceArray.push(nextSpace)  
+            } 
             else {
-                ctx.fillStyle = 'lightgreen'
+                let nextSpace = new GameSpace(i,j, 'lightgreen', true)
+                gameSpaceArray.push(nextSpace)  
             }
-        gameSpaceArray[i] = new GameSpace(i,j)
-        gameSpaceArray[i].renderSpace()
+        
+                 
     }
 }
+
+
+gameSpaceArray.forEach(item => {
+    item.renderSpace()
+    console.log(item)
+   
+})
 
 
 
