@@ -10,8 +10,8 @@ body {
 #container {
     background-color: transparent;
     display: grid;
-    grid-template-rows: 100px 600px 2fr;
-    grid-template-columns: 1fr 600px 1fr;
+    grid-template-rows: 100px 550px 2fr;
+    grid-template-columns: 1fr 550px 1fr;
     grid-template-areas: 
         ' topleft topmid topright'
         ' left game right'

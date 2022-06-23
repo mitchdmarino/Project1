@@ -234,6 +234,10 @@ const skirmish = function(attackingPiece, defendingPiece) {
         console.log(`The flag has been captured! ${attackingPiece.color} wins!`)
         output.innerHTML=`The flag has been captured! ${attackingPiece.color} wins!`
         intel(defendingPiece)
+        redTeam.forEach(item => {
+            item.revealed=true
+        })
+        newBoard()
     }
     if (defendingPiece.rank === 'b') {
         console.log('kaboom?')
@@ -358,6 +362,11 @@ const intel = function(defeatedSoldier) {
     // if bluemoves is empty, blue has no more moveable pieces. game over. 
     if (blueMoves.length === 0) {
         gameStatus = false
+        output.innerHTML='Game Over. You do not have any moveable pieces left. You lose.'
+        redTeam.forEach(item => {
+            item.revealed=true
+        })
+        newBoard()
     }
     redTeam.forEach(item => {
         
@@ -377,6 +386,11 @@ const intel = function(defeatedSoldier) {
     // if redmoves is empty, red has no more moveable pieces. game over. 
     if (redMoves.length === 0) {
         gameStatus = false
+        output.innerHTML = 'You win! Red has no more movable pieces.'
+        redTeam.forEach(item => {
+            item.revealed=true
+        })
+        newBoard()
     }
     console.log(redMoves.length)
 }
