@@ -1,4 +1,7 @@
 # Project 1 Pitch: Stratego Lite 
+
+## Check out the REACT VERSION <a href="https://mitchdmarino.github.io/stratego-react/">HERE</a>
+
 [Stratego](https://en.wikipedia.org/wiki/Stratego) is a classic board game consisting of a battlefield where two players each attempt to capture the opponent's flag. Are you ready to command your battalion to victory? 
 
 The gameboard is the battlefield. Hurry up! The battle is starting soon. During the calm before the storm, set up your pieces strategically to maximize offensive and defensive output. Once battle commences, charge your pieces forward to get to your opponent's flag. Careful! Don't get too aggresive or you might get outflanked, and watch out for bombs and that pesky spy! Use your scouts to 'scout' the battlefield. Utilize your stronger soldiers to their fullest potential. In a game of sacrifice, constant risk-vs-reward assesments, and ultimate strategy and bluffing, inspire your troops for greatness. Bring your army to victory by sheer force of will. 
